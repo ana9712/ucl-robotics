@@ -10,7 +10,7 @@
 #define _TICK_LENGTH 3.25
 
 int calculate_arc_length(int angle) {
-    double arc_length = _WHEEL_BASE * (angle * M_PI / 180);
+    double arc_length = _WHEEL_BASE * (angle * PI / 180);
     return (arc_length / _TICK_LENGTH);
 }
 
