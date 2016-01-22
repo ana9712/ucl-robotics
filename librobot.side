@@ -1,0 +1,13 @@
+librobot.h
+librobot.c
+task1_1.c
+task1_2.c
+task1_3.c
+>compiler=C
+>memtype=cmm main ram compact
+>optimize=-Os
+>-m32bit-doubles
+>-fno-exceptions
+>defs::-std=c99
+>-lm
+>BOARD::ACTIVITYBOARD
