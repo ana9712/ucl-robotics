@@ -1,5 +1,4 @@
 task1_1.c
-robot.c
 >compiler=C
 >memtype=cmm main ram compact
 >optimize=-Os
