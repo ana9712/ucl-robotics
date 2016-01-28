@@ -1,10 +1,11 @@
 /*
-  Created by Matthew Bell and Wayne Tsui. 
+  Created by Matthew Bell and Wayne Tsui.
+  This programme spins the robot in a circle on the spot. 
 */
 
 #include "simpletools.h"                      
 #include "abdrive.h"
-#include "librobot.h"
+#include "robot.h"
 
 int main() {
   while(1) {

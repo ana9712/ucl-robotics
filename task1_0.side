@@ -1,8 +1,4 @@
-librobot.h
-librobot.c
-task1_1.c
-task1_2.c
-task1_3.c
+task1_0.c
 >compiler=C
 >memtype=cmm main ram compact
 >optimize=-Os
