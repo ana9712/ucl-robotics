@@ -3,8 +3,6 @@
   This programme spins the robot in a circle on the spot. 
 */
 
-#include "simpletools.h"                      
-#include "abdrive.h"
 #include "librobot.h"
 
 int main() {

@@ -3,8 +3,6 @@
   This programme gets the robot to move in a 1-metre square.
 */
 
-#include "simpletools.h"                      
-#include "abdrive.h"
 #include "librobot.h"
 
 void drawSquare(int n) {
