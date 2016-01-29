@@ -39,7 +39,7 @@
       swapped = false;
       for (i = 1; i < n; i++) {
         // Move inbetween each number, 325mm
-        drive_goto(325,325);
+        drive_goto(100,100);
         if ( arr[i-1] > arr[i] ) {
           swap(&arr[i-1],&arr[i]);
           swapped=true;
@@ -51,7 +51,7 @@
       }
       // Finished one cycle, return to starting position
       turn_pivot_function(180);
-      drive_goto((n-1)*325, (n-1)*325);
+      drive_goto((n-1)*100, (n-1)*100);
       turn_pivot_function(180);
       n--;
     } while (swapped);
@@ -60,7 +60,7 @@
 
   void results(int* arr, int length) {
     // List sorted, robot moves to middle of list and turn left.
-    drive_goto((((length-1)*325)/2 + 160), (((length-1)*325)/2 + 160));
+    drive_goto((((length-1)*100)/2 + 50), (((length-1)*100)/2 + 50));
     turn_pivot_function(-90);
   }
 
