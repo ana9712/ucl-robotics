@@ -70,7 +70,7 @@
       printf("%i ", *(g+n));
     }
     printf("\n");
-    
+
     //Input is sorted, go to middle of list and turn 90 degrees.
     drive_goto(((len-1)*325)/2, ((len-1)*325)/2);
     turn_pivot_function(-90);
