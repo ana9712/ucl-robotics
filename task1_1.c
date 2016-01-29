@@ -5,7 +5,7 @@
 
 #include "simpletools.h"                      
 #include "abdrive.h"
-#include "robot.h"
+#include "librobot.h"
 
 void drawSquare(int n) {
   for(int i = 0; i < 4; i++) {

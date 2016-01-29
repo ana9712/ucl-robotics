@@ -2,7 +2,7 @@
   Created by Matthew Bell and Wayne Tsui.
 */
 
-#include "robot.h"
+#include "librobot.h"
 
 int calculate_arc_length(int angle) {
     double arc_length = _WHEEL_BASE * (angle * PI / 180);

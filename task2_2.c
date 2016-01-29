@@ -1,11 +1,14 @@
 /*
   Created by Matthew Bell and Wayne Tsui.
-  This programme sorts a user input list of random numbers in ascending order using bubble sort algorithim.
+  This programme:
+  1. Sorts a user input list of random numbers in ascending order using bubble sort algorithim.
+  2. Displays the content of the list of numbers in each iteration (intermediary steps of the algorithm).
 */
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "simpletools.h"
+#include "librobot.h"
+
 
   int* getIntArr() {
     int i;
@@ -24,26 +27,42 @@
     int temp;
     int counter = 0;
 
-    for (int j = len-1; j > 0; j--) {
-      if (*(g+j) > *(g+j-1)) {
-        counter++;
-      }
+    printf("Showing intemediary steps: \n");
+    for (int n = 0; n < len; n++) {
+      printf("%i ", *(g+n));
     }
-
-    if (counter == len-1)
-      return g;
-    else
-      counter = 0;
+    printf("\n");
 
     for (int n = 0; n < len; n++) {
+
+      for (int j = len-1; j > 0; j--) {
+        if (*(g+j) > *(g+j-1)) {
+          counter++;
+        }
+      }
+
+      if (counter == len-1)
+        return g;
+      else
+        counter = 0;
+
       for (int i = 0; i < len-1; i++) {
+        for (int n = 0; n < len; n++) {
+          printf("%i ", *(g+n));
+        }
+        printf("\n");
+
         if (*(g+i) > *(g+i+1)) {
           temp = *(g+i+1);
           *(g+i+1) = *(g+i);
           *(g+i) = temp;
         }
-      }
 
+        for (int n = 0; n < len; n++) {
+          printf("%i ", *(g+n));
+        }
+        printf("\n");
+      }
     }
     return g;
   }
