@@ -30,14 +30,10 @@ void turn_function(int angle) {
 
 void turn_pivot_function(int angle) {
     int left_wheel = 0, right_wheel = 0;
-    if (angle > 0) {
+
       left_wheel = calculate_pivot_length(angle);
       right_wheel = -left_wheel;
-    }
-    else if (angle < 0) {
-      right_wheel = calculate_pivot_length(angle);
-      left_wheel = -right_wheel;
-    }
+
     drive_goto(left_wheel, right_wheel);
     return;
 }

@@ -8,7 +8,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-//#include "simpletools.h"
+#include "simpletools.h"
 
   int* getIntArr() {
     int i;

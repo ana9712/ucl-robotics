@@ -34,25 +34,25 @@
     bool swapped;
     int n = length;
     int i;
+    
+    pause(3000);
 
     do {
       swapped = false;
       for (i = 1; i < n; i++) {
         // Move inbetween each number, 325mm
-        drive_goto(100,100);
+        drive_goto(65,65);
         if ( arr[i-1] > arr[i] ) {
           swap(&arr[i-1],&arr[i]);
           swapped=true;
           // Blink LED for 1 second to indicate manual swap (PIN 26)
           high(26);
-          pause(1000);
+          pause(2000);
           low(26);
         }
       }
       // Finished one cycle, return to starting position
-      turn_pivot_function(180);
-      drive_goto((n-1)*100, (n-1)*100);
-      turn_pivot_function(180);
+      drive_goto(-(n-1)*65, -(n-1)*65);
       n--;
     } while (swapped);
     return arr;
@@ -60,13 +60,13 @@
 
   void results(int* arr, int length) {
     // List sorted, robot moves to middle of list and turn left.
-    drive_goto((((length-1)*100)/2 + 50), (((length-1)*100)/2 + 50));
-    turn_pivot_function(-90);
+    drive_goto((((length-1)*65)/2 + 32), (((length-1)*65)/2 + 32));
+    turn_pivot_function((-90));
   }
 
   int arrLen(int* g) {
     int length = 0;
-    int* h = g;
+    int* h = g; 
     while(1) {
       if (*h != '\0') {
         length++;
@@ -85,5 +85,5 @@ int main() {
     int length = arrLen(a);
     results(bubble_sort(a, length), length);
     free(a);
-
+      
 }
