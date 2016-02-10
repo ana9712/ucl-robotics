@@ -6,7 +6,7 @@
 //#include "simpletools.h"
 #include <stdio.h>
 
-  int xNum = 0, yNum = 0, zNum = 0;
+  int aNum = 0, bNum = 0, cNum = 0;
 
   int getNumberOfDisks() {
     printf("How many disk?\n");
@@ -47,39 +47,39 @@
       // Adjusting the number of disks on each of the peg after the move.
       switch (x) {
         case 'A':
-          xNum--;
+          aNum--;
           if (z == 'B') {
-            yNum++;
+            bNum++;
           }
           else {
-            zNum++;
+            cNum++;
           }
           break;
 
         case 'B':
-          yNum--;
+          bNum--;
           if (z == 'A') {
-            xNum++;
+            aNum++;
           }
           else {
-            zNum++;
+            cNum++;
           }
           break;
 
         case 'C':
-          zNum--;
+          cNum--;
           if (z == 'B') {
-            yNum++;
+            bNum++;
           }
           else {
-            xNum++;
+            aNum++;
           }
           break;
 
         default: break;
       }
       // Display the number of disks on each peg after each move.
-      printf("%d    %d    %d\n", xNum, yNum, zNum);
+      printf("%d    %d    %d\n", aNum, bNum, cNum);
     }
     else {
       towerOfHanoi(n-1, x, z, y);
@@ -105,25 +105,25 @@ int main() {
       x = 'A';
       y = 'B';
       z = 'C';
-      xNum = n;
+      aNum = n;
       break;
 
     case 'B':
       x = 'B';
       y = 'A';
       z = 'C';
-      yNum = n;
+      bNum = n;
       break;
 
     case 'C':
       x = 'C';
       y = 'B';
       z = 'A';
-      zNum = n;
+      cNum = n;
       break;
   }
   // Initial arrangement of disks on pegs.
-  printf("%d    %d    %d\n", xNum, yNum, zNum);
+  printf("%d    %d    %d\n", aNum, bNum, cNum);
 
   towerOfHanoi(n, x, y, z);
   printf("Tower of Hanoi solved.\n");
