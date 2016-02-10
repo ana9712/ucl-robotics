@@ -7,8 +7,8 @@ This programme solves the Towers of Hanoi game using a robot to signal a move of
 #include <stdbool.h>
 //#include "librobot.h"
 
-#define oneUnit 65; // 210mm, width of A4-size paper
-#define twoUnit 130; // 420mm, width of 2 A4-size paper
+#define ONE_UNIT 65; // 210mm, width of A4-size paper
+#define TWO_UNIT 130; // 420mm, width of 2 A4-size paper
 
 bool firstTime = true;
 
@@ -72,33 +72,33 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
 
         case 'A':
           if (x == 'B') {
-            //drive_goto(oneUnit, oneUnit);
+            //drive_goto(ONE_UNIT, ONE_UNIT);
             printf("Returned to %c\n", x);
           }
           if (x == 'C') {
-            //drive_goto(twoUnit, twoUnit);
+            //drive_goto(TWO_UNIT, TWO_UNIT);
             printf("Returned to %c\n", x);
           }
           break;
 
         case 'B':
           if (x == 'C') {
-            //drive_goto(oneUnit, oneUnit);
+            //drive_goto(ONE_UNIT, ONE_UNIT);
             printf("Returned to %c\n", x);
           }
           if (x == 'A') {
-            //drive_goto(-oneUnit, -oneUnit);
+            //drive_goto(-ONE_UNIT, -ONE_UNIT);
             printf("Returned to %c\n", x);
           }
           break;
 
         case 'C':
           if (x == 'B') {
-            //drive_goto(-oneUnit, -oneUnit);
+            //drive_goto(-ONE_UNIT, -ONE_UNIT);
             printf("Returned to %c\n", x);
           }
           if (x == 'A'){
-            //drive_goto(-twoUnit, -twoUnit);
+            //drive_goto(-TWO_UNIT, -TWO_UNIT);
             printf("Returned to %c\n", x);
           }
 
@@ -114,12 +114,12 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
       case 'A':
         //signalStart();
         if (z == 'B') {
-          //drive_goto(oneUnit, oneUnit);
+          //drive_goto(ONE_UNIT, ONE_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
         }
         else {
-          //drive_goto(twoUnit, twoUnit);
+          //drive_goto(TWO_UNIT, TWO_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
         }
@@ -127,12 +127,12 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
 
       case 'B':
         if (z == 'C') {
-          //drive_goto(oneUnit, oneUnit);
+          //drive_goto(ONE_UNIT, ONE_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
         }
         else {
-          //drive_goto(-oneUnit, -oneUnit);
+          //drive_goto(-ONE_UNIT, -ONE_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
         }
@@ -140,12 +140,12 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
 
       case 'C':
         if (z == 'B') {
-          //drive_goto(-oneUnit, -oneUnit);
+          //drive_goto(-ONE_UNIT, -ONE_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
         }
         else {
-          //drive_goto(-twoUnit, -twoUnit);
+          //drive_goto(-TWO_UNIT, -TWO_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
         }
