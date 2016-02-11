@@ -3,7 +3,7 @@
   This programme solves the Towers of Hanoi game.
 */
 
-//#include "simpletools.h"
+#include "simpletools.h"
 #include <stdio.h>
 
   int aNum = 0, bNum = 0, cNum = 0;
