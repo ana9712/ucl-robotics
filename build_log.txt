@@ -1,4 +1,21 @@
+Project Directory: E:/mbell/git/robot-controller/pair56_task3/
+
+SimpleIDE Version 1.0.2
+E:/mbell/SimpleIDE/Learn/Simple Libraries/
+E:/mbell/SimpleIDE/ Updated on: 2016-02-11
+
 propeller-elf-gcc.exe -v GCC 4.6.1 (propellergcc_v1_0_0_2408)
-propeller-elf-gcc.exe -I . -L . -I E:/mbell/SimpleIDE/Learn/Simple Libraries/Utility/libsimpletools -L E:/mbell/SimpleIDE/Learn/Simple Libraries/Utility/libsimpletools/cmm/ -I E:/mbell/SimpleIDE/Learn/Simple Libraries/TextDevices/libsimpletext -L E:/mbell/SimpleIDE/Learn/Simple Libraries/TextDevices/libsimpletext/cmm/ -I E:/mbell/SimpleIDE/Learn/Simple Libraries/Protocol/libsimplei2c -L E:/mbell/SimpleIDE/Learn/Simple Libraries/Protocol/libsimplei2c/cmm/ -o cmm/task3_1.elf -Os -mcmm -m32bit-doubles -fno-exceptions -std=c99 task3_1.c -lm -lsimpletools -lsimpletext -lsimplei2c -lm -lsimpletools -lsimpletext -lm -lsimpletools -lm
-propeller-load -s cmm/task3_1.elf
-propeller-elf-objdump -h cmm/task3_1.elf
+propeller-elf-gcc.exe -I . -L . -I E:/mbell/SimpleIDE/Learn/Simple Libraries/Utility/libsimpletools -L E:/mbell/SimpleIDE/Learn/Simple Libraries/Utility/libsimpletools/cmm/ -I E:/mbell/SimpleIDE/Learn/Simple Libraries/TextDevices/libsimpletext -L E:/mbell/SimpleIDE/Learn/Simple Libraries/TextDevices/libsimpletext/cmm/ -I E:/mbell/SimpleIDE/Learn/Simple Libraries/Protocol/libsimplei2c -L E:/mbell/SimpleIDE/Learn/Simple Libraries/Protocol/libsimplei2c/cmm/ -I E:/mbell/SimpleIDE/Learn/Simple Libraries/Robotics/ActivityBot/libabdrive -L E:/mbell/SimpleIDE/Learn/Simple Libraries/Robotics/ActivityBot/libabdrive/cmm/ -I E:/mbell/SimpleIDE/Learn/Simple Libraries/TextDevices/libfdserial -L E:/mbell/SimpleIDE/Learn/Simple Libraries/TextDevices/libfdserial/cmm/ -Os -mcmm -m32bit-doubles -fno-exceptions -std=c99 -c librobot.c -o cmm/librobot.o
+propeller-elf-gcc.exe -I . -L . -I E:/mbell/SimpleIDE/Learn/Simple Libraries/Utility/libsimpletools -L E:/mbell/SimpleIDE/Learn/Simple Libraries/Utility/libsimpletools/cmm/ -I E:/mbell/SimpleIDE/Learn/Simple Libraries/TextDevices/libsimpletext -L E:/mbell/SimpleIDE/Learn/Simple Libraries/TextDevices/libsimpletext/cmm/ -I E:/mbell/SimpleIDE/Learn/Simple Libraries/Protocol/libsimplei2c -L E:/mbell/SimpleIDE/Learn/Simple Libraries/Protocol/libsimplei2c/cmm/ -I E:/mbell/SimpleIDE/Learn/Simple Libraries/Robotics/ActivityBot/libabdrive -L E:/mbell/SimpleIDE/Learn/Simple Libraries/Robotics/ActivityBot/libabdrive/cmm/ -I E:/mbell/SimpleIDE/Learn/Simple Libraries/TextDevices/libfdserial -L E:/mbell/SimpleIDE/Learn/Simple Libraries/TextDevices/libfdserial/cmm/ -o cmm/task3_2.elf -Os -mcmm -m32bit-doubles -fno-exceptions -std=c99 cmm/librobot.o task3_2.c -lm -lsimpletools -lsimpletext -lsimplei2c -labdrive -lfdserial -lm -lsimpletools -lsimpletext -lsimplei2c -labdrive -lm -lsimpletools -lsimpletext -lsimplei2c -lm -lsimpletools -lsimpletext -lm -lsimpletools -lm
+propeller-load -s cmm/task3_2.elf
+propeller-elf-objdump -h cmm/task3_2.elf
+Done. Build Succeeded!
+
+propeller-load.exe -Dreset=dtr -I C:/Program Files (x86)/SimpleIDE/bin/../propeller-gcc/propeller-load/ -b ACTIVITYBOARD cmm/task3_2.elf -r -p COM4
+Propeller Version 1 on COM4
+Loading cmm/task3_2.elf to hub memory
+
+19800 bytes sent
+
+Verifying RAM ... 
+OK

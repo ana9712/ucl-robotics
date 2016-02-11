@@ -5,14 +5,17 @@ This programme solves the Towers of Hanoi game using a robot to signal a move of
 
 #include <stdio.h>
 #include <stdbool.h>
-//#include "librobot.h"
+#include "librobot.h"
 
-#define ONE_UNIT 65; // 210mm, width of A4-size paper
-#define TWO_UNIT 130; // 420mm, width of 2 A4-size paper
+#define NO_OF_DISKS 3
+#define START_PEG 'A'
+
+const int ONE_UNIT = 65; // 210mm, width of A4-size paper
+const int TWO_UNIT = 130; // 420mm, width of 2 A4-size paper
 
 bool firstTime = true;
 
-int getNumberOfDisks() {
+/*int getNumberOfDisks() {
   printf("How many disk?\n");
   while(1) {
     int n;
@@ -40,7 +43,7 @@ char getStartPeg() {
       printf("Which peg do you want the disk to start from?\n");
     }
   }
-}
+}*/
 /*
   // On LED for two seconds
   void signalStart() {
@@ -72,33 +75,33 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
 
         case 'A':
           if (x == 'B') {
-            //drive_goto(ONE_UNIT, ONE_UNIT);
+            drive_goto(ONE_UNIT, ONE_UNIT);
             printf("Returned to %c\n", x);
           }
           if (x == 'C') {
-            //drive_goto(TWO_UNIT, TWO_UNIT);
+            drive_goto(TWO_UNIT, TWO_UNIT);
             printf("Returned to %c\n", x);
           }
           break;
 
         case 'B':
           if (x == 'C') {
-            //drive_goto(ONE_UNIT, ONE_UNIT);
+            drive_goto(ONE_UNIT, ONE_UNIT);
             printf("Returned to %c\n", x);
           }
           if (x == 'A') {
-            //drive_goto(-ONE_UNIT, -ONE_UNIT);
+            drive_goto(-ONE_UNIT, -ONE_UNIT);
             printf("Returned to %c\n", x);
           }
           break;
 
         case 'C':
           if (x == 'B') {
-            //drive_goto(-ONE_UNIT, -ONE_UNIT);
+            drive_goto(-ONE_UNIT, -ONE_UNIT);
             printf("Returned to %c\n", x);
           }
           if (x == 'A'){
-            //drive_goto(-TWO_UNIT, -TWO_UNIT);
+            drive_goto(-TWO_UNIT, -TWO_UNIT);
             printf("Returned to %c\n", x);
           }
 
@@ -114,12 +117,12 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
       case 'A':
         //signalStart();
         if (z == 'B') {
-          //drive_goto(ONE_UNIT, ONE_UNIT);
+          drive_goto(ONE_UNIT, ONE_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
         }
         else {
-          //drive_goto(TWO_UNIT, TWO_UNIT);
+          drive_goto(TWO_UNIT, TWO_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
         }
@@ -127,12 +130,12 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
 
       case 'B':
         if (z == 'C') {
-          //drive_goto(ONE_UNIT, ONE_UNIT);
+          drive_goto(ONE_UNIT, ONE_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
         }
         else {
-          //drive_goto(-ONE_UNIT, -ONE_UNIT);
+          drive_goto(-ONE_UNIT, -ONE_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
         }
@@ -140,12 +143,12 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
 
       case 'C':
         if (z == 'B') {
-          //drive_goto(-ONE_UNIT, -ONE_UNIT);
+          drive_goto(-ONE_UNIT, -ONE_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
         }
         else {
-          //drive_goto(-TWO_UNIT, -TWO_UNIT);
+          drive_goto(-TWO_UNIT, -TWO_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
         }
@@ -162,8 +165,10 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
 
 
 int main() {
-int n = getNumberOfDisks();
-char c = getStartPeg(), x, y, z, t;
+//int n = getNumberOfDisks();
+//char c = getStartPeg(), x, y, z, t;
+int n = NO_OF_DISKS;
+char c = START_PEG, x, y, z, t;
 
 /*  Sort pegs
     Start at A, end at C.
