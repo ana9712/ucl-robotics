@@ -73,33 +73,33 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
         case 'A':
           if (x == 'B') {
             drive_goto(ONE_UNIT, ONE_UNIT);
-            //print("Returned to %c\n", x);
+            //print("Move to %c\n", x);
           }
           if (x == 'C') {
             drive_goto(TWO_UNIT, TWO_UNIT);
-            //print("Returned to %c\n", x);
+            //print("Move to %c\n", x);
           }
           break;
 
         case 'B':
           if (x == 'C') {
             drive_goto(ONE_UNIT, ONE_UNIT);
-            //print("Returned to %c\n", x);
+            //print("Move to %c\n", x);
           }
           if (x == 'A') {
             drive_goto(-ONE_UNIT, -ONE_UNIT);
-            //print("Returned to %c\n", x);
+            //print("Move to %c\n", x);
           }
           break;
 
         case 'C':
           if (x == 'B') {
             drive_goto(-ONE_UNIT, -ONE_UNIT);
-            //print("Returned to %c\n", x);
+            //print("Move to %c\n", x);
           }
           if (x == 'A'){
             drive_goto(-TWO_UNIT, -TWO_UNIT);
-            //print("Returned to %c\n", x);
+            //print("Move to %c\n", x);
           }
 
         default: break;
@@ -115,42 +115,39 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
         signalStart();
         if (z == 'B') {
           drive_goto(ONE_UNIT, ONE_UNIT);
-          signalEnd();
           //print("Move %c to %c\n", x, z);
         }
         else {
           drive_goto(TWO_UNIT, TWO_UNIT);
-          signalEnd();
           //print("Move %c to %c\n", x, z);
         }
+        signalEnd();
         break;
 
       case 'B':
         signalStart();
         if (z == 'C') {
           drive_goto(ONE_UNIT, ONE_UNIT);
-          signalEnd();
           //print("Move %c to %c\n", x, z);
         }
         else {
           drive_goto(-ONE_UNIT, -ONE_UNIT);
-          signalEnd();
           //print("Move %c to %c\n", x, z);
         }
+        signalEnd();
         break;
 
       case 'C':
         signalStart();
         if (z == 'B') {
           drive_goto(-ONE_UNIT, -ONE_UNIT);
-          signalEnd();
           //print("Move %c to %c\n", x, z);
         }
         else {
           drive_goto(-TWO_UNIT, -TWO_UNIT);
-          signalEnd();
           //print("Move %c to %c\n", x, z);
         }
+        signalEnd();
         break;
 
       default: break;
