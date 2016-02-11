@@ -45,13 +45,8 @@ char getStartPeg() {
       print("Which peg do you want the disk to start from?\n");
     }
   }
-<<<<<<< HEAD:pair56_task3/task3_2.c
 }*/
-/*
-=======
-}
 
->>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
   // On LED for two seconds
   void signalStart() {
     high(26);
@@ -59,15 +54,10 @@ char getStartPeg() {
     low(26);
   }
 
-  // Blink LED for two seconds
+  // Turn left to face in then turn back right.
   void signalEnd() {
-    int n = 40;
-    while(n > 0) {
-      high(26);
-      pause(50);
-      low(26);
-      n--;
-    }
+    turn_pivot_function(-90);
+    turn_pivot_function(90);
   }
 
 
@@ -82,61 +72,34 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
 
         case 'A':
           if (x == 'B') {
-<<<<<<< HEAD:pair56_task3/task3_2.c
             drive_goto(ONE_UNIT, ONE_UNIT);
-            printf("Returned to %c\n", x);
+            //print("Returned to %c\n", x);
           }
           if (x == 'C') {
             drive_goto(TWO_UNIT, TWO_UNIT);
-            printf("Returned to %c\n", x);
-=======
-            drive_goto(65, 65);
             //print("Returned to %c\n", x);
-          }
-          if (x == 'C') {
-            drive_goto(130, 130);
-            //print("Returned to %c\n", x);
->>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
           }
           break;
 
         case 'B':
           if (x == 'C') {
-<<<<<<< HEAD:pair56_task3/task3_2.c
             drive_goto(ONE_UNIT, ONE_UNIT);
-            printf("Returned to %c\n", x);
+            //print("Returned to %c\n", x);
           }
           if (x == 'A') {
             drive_goto(-ONE_UNIT, -ONE_UNIT);
-            printf("Returned to %c\n", x);
-=======
-            drive_goto(65, 65);
             //print("Returned to %c\n", x);
-          }
-          if (x == 'A') {
-            drive_goto(-65, -65);
-            //print("Returned to %c\n", x);
->>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
           }
           break;
 
         case 'C':
           if (x == 'B') {
-<<<<<<< HEAD:pair56_task3/task3_2.c
             drive_goto(-ONE_UNIT, -ONE_UNIT);
-            printf("Returned to %c\n", x);
+            //print("Returned to %c\n", x);
           }
           if (x == 'A'){
             drive_goto(-TWO_UNIT, -TWO_UNIT);
-            printf("Returned to %c\n", x);
-=======
-            drive_goto(-65, -65);
             //print("Returned to %c\n", x);
-          }
-          if (x == 'A'){
-            drive_goto(-130, -130);
-            //print("Returned to %c\n", x);
->>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
           }
 
         default: break;
@@ -151,74 +114,44 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
       case 'A':
         signalStart();
         if (z == 'B') {
-<<<<<<< HEAD:pair56_task3/task3_2.c
           drive_goto(ONE_UNIT, ONE_UNIT);
-          //signalEnd();
-          printf("Move %c to %c\n", x, z);
+          signalEnd();
+          //print("Move %c to %c\n", x, z);
         }
         else {
           drive_goto(TWO_UNIT, TWO_UNIT);
-          //signalEnd();
-          printf("Move %c to %c\n", x, z);
-=======
-          drive_goto(65, 65);
           signalEnd();
           //print("Move %c to %c\n", x, z);
-        }
-        else {
-          drive_goto(130, 130);
-          signalEnd();
-          //print("Move %c to %c\n", x, z);
->>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
         }
         break;
 
       case 'B':
+        signalStart();
         if (z == 'C') {
-<<<<<<< HEAD:pair56_task3/task3_2.c
           drive_goto(ONE_UNIT, ONE_UNIT);
-          //signalEnd();
-          printf("Move %c to %c\n", x, z);
+          signalEnd();
+          //print("Move %c to %c\n", x, z);
         }
         else {
           drive_goto(-ONE_UNIT, -ONE_UNIT);
-          //signalEnd();
-          printf("Move %c to %c\n", x, z);
-=======
-          drive_goto(65, 65);
           signalEnd();
           //print("Move %c to %c\n", x, z);
-        }
-        else {
-          drive_goto(-65, -65);
-          signalEnd();
-          //print("Move %c to %c\n", x, z);
->>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
         }
         break;
 
       case 'C':
+        signalStart();
         if (z == 'B') {
-<<<<<<< HEAD:pair56_task3/task3_2.c
           drive_goto(-ONE_UNIT, -ONE_UNIT);
-          //signalEnd();
-          printf("Move %c to %c\n", x, z);
+          signalEnd();
+          //print("Move %c to %c\n", x, z);
         }
         else {
           drive_goto(-TWO_UNIT, -TWO_UNIT);
-          //signalEnd();
-          printf("Move %c to %c\n", x, z);
-=======
-          drive_goto(-65, -65);
           signalEnd();
           //print("Move %c to %c\n", x, z);
         }
-        else {
-          drive_goto(-130, -130);
-          signalEnd();
-          //print("Move %c to %c\n", x, z);
->>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
-        }
+        break;
 
       default: break;
     }
@@ -265,7 +198,7 @@ switch (c) {
   default: break;
 }
 towerOfHanoi(n, x, y, z, t);
-// Turn left to signal end of algorithm.
-turn_pivot_function(-90);
+// Turn right to signal end of algorithm.
+turn_pivot_function(90);
 //print("Tower of Hanoi solved.\n");
 }
