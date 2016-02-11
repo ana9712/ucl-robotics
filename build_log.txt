@@ -1,0 +1,4 @@
+propeller-elf-gcc.exe -v GCC 4.6.1 (propellergcc_v1_0_0_2408)
+propeller-elf-gcc.exe -I . -L . -I E:/mbell/SimpleIDE/Learn/Simple Libraries/Utility/libsimpletools -L E:/mbell/SimpleIDE/Learn/Simple Libraries/Utility/libsimpletools/cmm/ -I E:/mbell/SimpleIDE/Learn/Simple Libraries/TextDevices/libsimpletext -L E:/mbell/SimpleIDE/Learn/Simple Libraries/TextDevices/libsimpletext/cmm/ -I E:/mbell/SimpleIDE/Learn/Simple Libraries/Protocol/libsimplei2c -L E:/mbell/SimpleIDE/Learn/Simple Libraries/Protocol/libsimplei2c/cmm/ -o cmm/task3_1.elf -Os -mcmm -m32bit-doubles -fno-exceptions -std=c99 task3_1.c -lm -lsimpletools -lsimpletext -lsimplei2c -lm -lsimpletools -lsimpletext -lm -lsimpletools -lm
+propeller-load -s cmm/task3_1.elf
+propeller-elf-objdump -h cmm/task3_1.elf

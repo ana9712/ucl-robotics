@@ -3,40 +3,43 @@
   This programme solves the Towers of Hanoi game.
 */
 
-//#include "simpletools.h"
+#include "simpletools.h"
 #include <stdio.h>
+
+#define _NO_OF_DISKS 3
+#define _START_PEG 'A'
 
   int aNum = 0, bNum = 0, cNum = 0;
 
-  int getNumberOfDisks() {
-    printf("How many disk?\n");
-    while(1) {
-      int n;
-      scanf("%d", &n);
-      if (n>0) {
-        return n;
-      }
-      else {
-        printf("You did not input a valid positive integer. Try again!\n");
-        printf("How many disk?\n");
-      }
-    }
-  }
+ // int getNumberOfDisks() {
+ //   printf("How many disk?\n");
+ //   while(1) {
+ //     int n;
+ //     scanf("%d", &n);
+ //     if (n>0) {
+ //       return n;
+ //     }
+ //     else {
+ //       printf("You did not input a valid positive integer. Try again!\n");
+ //       printf("How many disk?\n");
+ //     }
+ //   }
+ // }
 
-  char getStartPeg() {
-    char c;
-    printf("Now, on which peg do you want the disks to start from? A? B? or C?\n");
-    while(1) {
-      scanf("%c", &c);
-      if (c == 'A' || c == 'B' || c =='C') {
-        return c;
-      }
-      else {
-        printf("You did not input a valid character. Input A, B or C.\n");
-        printf("Which peg do you want the disk to start from?\n");
-      }
-    }
-  }
+ // char getStartPeg() {
+ //   char c;
+ //   printf("Now, on which peg do you want the disks to start from? A? B? or C?\n");
+ //   while(1) {
+ //     scanf("%c", &c);
+ //     if (c == 'A' || c == 'B' || c =='C') {
+ //       return c;
+ //     }
+ //     else {
+ //       printf("You did not input a valid character. Input A, B or C.\n");
+ //       printf("Which peg do you want the disk to start from?\n");
+ //     }
+ //   }
+ // }
 
   void towerOfHanoi(int n, char x, char y, char z) {
     if (n == 1) {
@@ -90,8 +93,10 @@
 
 
 int main() {
-  int n = getNumberOfDisks();
-  char c = getStartPeg(), x, y, z;
+  //int n = getNumberOfDisks();
+  //char c = getStartPeg(), x, y, z;
+  int n = _NO_OF_DISKS;
+  char c = _START_PEG, x, y, z;
 
 
 /*  Sort pegs
