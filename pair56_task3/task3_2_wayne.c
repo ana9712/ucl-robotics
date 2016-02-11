@@ -3,6 +3,8 @@ Created by Wayne Tsui and Matthew Bell on 10/2/2016.
 This programme solves the Towers of Hanoi game using a robot to signal a move of a disk from one peg to another and also to signal the end of the algorithm.
 */
 
+#include "simpletools.h"
+#include "abdrive.h"
 #include <stdio.h>
 #include <stdbool.h>
 #include "librobot.h"
@@ -24,14 +26,14 @@ bool firstTime = true;
       return n;
     }
     else {
-      printf("You did not input a valid positive integer. Try again\n");
-      printf("How many disk?");
+      print("You did not input a valid positive integer. Try again\n");
+      print("How many disk?");
     }
   }
 }
 
 char getStartPeg() {
-  printf("Now, on which peg do you want the disks to start from? A? B? or C?");
+  print("Now, on which peg do you want the disks to start from? A? B? or C?");
   while(1) {
     char c;
     scanf("%c", &c);
@@ -39,12 +41,17 @@ char getStartPeg() {
       return c;
     }
     else {
-      printf("You did not input a valid character. Input A, B or C.\n");
-      printf("Which peg do you want the disk to start from?\n");
+      print("You did not input a valid character. Input A, B or C.\n");
+      print("Which peg do you want the disk to start from?\n");
     }
   }
+<<<<<<< HEAD:pair56_task3/task3_2.c
 }*/
 /*
+=======
+}
+
+>>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
   // On LED for two seconds
   void signalStart() {
     high(26);
@@ -62,7 +69,7 @@ char getStartPeg() {
       n--;
     }
   }
-*/
+
 
 void towerOfHanoi(int n, char x, char y, char z, char t) {
 
@@ -75,34 +82,61 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
 
         case 'A':
           if (x == 'B') {
+<<<<<<< HEAD:pair56_task3/task3_2.c
             drive_goto(ONE_UNIT, ONE_UNIT);
             printf("Returned to %c\n", x);
           }
           if (x == 'C') {
             drive_goto(TWO_UNIT, TWO_UNIT);
             printf("Returned to %c\n", x);
+=======
+            drive_goto(65, 65);
+            //print("Returned to %c\n", x);
+          }
+          if (x == 'C') {
+            drive_goto(130, 130);
+            //print("Returned to %c\n", x);
+>>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
           }
           break;
 
         case 'B':
           if (x == 'C') {
+<<<<<<< HEAD:pair56_task3/task3_2.c
             drive_goto(ONE_UNIT, ONE_UNIT);
             printf("Returned to %c\n", x);
           }
           if (x == 'A') {
             drive_goto(-ONE_UNIT, -ONE_UNIT);
             printf("Returned to %c\n", x);
+=======
+            drive_goto(65, 65);
+            //print("Returned to %c\n", x);
+          }
+          if (x == 'A') {
+            drive_goto(-65, -65);
+            //print("Returned to %c\n", x);
+>>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
           }
           break;
 
         case 'C':
           if (x == 'B') {
+<<<<<<< HEAD:pair56_task3/task3_2.c
             drive_goto(-ONE_UNIT, -ONE_UNIT);
             printf("Returned to %c\n", x);
           }
           if (x == 'A'){
             drive_goto(-TWO_UNIT, -TWO_UNIT);
             printf("Returned to %c\n", x);
+=======
+            drive_goto(-65, -65);
+            //print("Returned to %c\n", x);
+          }
+          if (x == 'A'){
+            drive_goto(-130, -130);
+            //print("Returned to %c\n", x);
+>>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
           }
 
         default: break;
@@ -115,8 +149,9 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
     switch (x) {
 
       case 'A':
-        //signalStart();
+        signalStart();
         if (z == 'B') {
+<<<<<<< HEAD:pair56_task3/task3_2.c
           drive_goto(ONE_UNIT, ONE_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
@@ -125,11 +160,22 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
           drive_goto(TWO_UNIT, TWO_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
+=======
+          drive_goto(65, 65);
+          signalEnd();
+          //print("Move %c to %c\n", x, z);
+        }
+        else {
+          drive_goto(130, 130);
+          signalEnd();
+          //print("Move %c to %c\n", x, z);
+>>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
         }
         break;
 
       case 'B':
         if (z == 'C') {
+<<<<<<< HEAD:pair56_task3/task3_2.c
           drive_goto(ONE_UNIT, ONE_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
@@ -138,11 +184,22 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
           drive_goto(-ONE_UNIT, -ONE_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
+=======
+          drive_goto(65, 65);
+          signalEnd();
+          //print("Move %c to %c\n", x, z);
+        }
+        else {
+          drive_goto(-65, -65);
+          signalEnd();
+          //print("Move %c to %c\n", x, z);
+>>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
         }
         break;
 
       case 'C':
         if (z == 'B') {
+<<<<<<< HEAD:pair56_task3/task3_2.c
           drive_goto(-ONE_UNIT, -ONE_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
@@ -151,6 +208,16 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
           drive_goto(-TWO_UNIT, -TWO_UNIT);
           //signalEnd();
           printf("Move %c to %c\n", x, z);
+=======
+          drive_goto(-65, -65);
+          signalEnd();
+          //print("Move %c to %c\n", x, z);
+        }
+        else {
+          drive_goto(-130, -130);
+          signalEnd();
+          //print("Move %c to %c\n", x, z);
+>>>>>>> 37693cac70e7ec988f332360437ce554009922c1:pair56_task3/task3_2_wayne.c
         }
 
       default: break;
@@ -199,6 +266,6 @@ switch (c) {
 }
 towerOfHanoi(n, x, y, z, t);
 // Turn left to signal end of algorithm.
-//turn_pivot_function(-90);
-printf("Tower of Hanoi solved.\n");
+turn_pivot_function(-90);
+//print("Tower of Hanoi solved.\n");
 }
