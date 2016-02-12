@@ -9,8 +9,8 @@ This programme solves the Towers of Hanoi game using a robot to signal a move of
 #include <stdbool.h>
 #include "librobot.h"
 
-#define NO_OF_DISKS 3
-#define START_PEG 'C'
+#define NO_OF_DISKS 4
+#define START_PEG 'B'
 
 const int ONE_UNIT = 130; // 210mm, width of A4-size paper
 const int TWO_UNIT = 260; // 420mm, width of 2 A4-size paper
@@ -75,7 +75,7 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
             drive_goto(ONE_UNIT, ONE_UNIT);
             //print("Move to %c\n", x);
           }
-          if (x == 'C') {
+          else if (x == 'C') {
             drive_goto(TWO_UNIT, TWO_UNIT);
             //print("Move to %c\n", x);
           }
@@ -86,7 +86,7 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
             drive_goto(ONE_UNIT, ONE_UNIT);
             //print("Move to %c\n", x);
           }
-          if (x == 'A') {
+          else if (x == 'A') {
             drive_goto(-ONE_UNIT, -ONE_UNIT);
             //print("Move to %c\n", x);
           }
@@ -97,10 +97,11 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
             drive_goto(-ONE_UNIT, -ONE_UNIT);
             //print("Move to %c\n", x);
           }
-          if (x == 'A'){
+          else if (x == 'A'){
             drive_goto(-TWO_UNIT, -TWO_UNIT);
             //print("Move to %c\n", x);
           }
+          break;
 
         default: break;
       }
@@ -117,7 +118,7 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
           drive_goto(ONE_UNIT, ONE_UNIT);
           //print("Move %c to %c\n", x, z);
         }
-        else {
+        else if (z == 'C') {
           drive_goto(TWO_UNIT, TWO_UNIT);
           //print("Move %c to %c\n", x, z);
         }
@@ -130,7 +131,7 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
           drive_goto(ONE_UNIT, ONE_UNIT);
           //print("Move %c to %c\n", x, z);
         }
-        else {
+        else if (z == 'A') {
           drive_goto(-ONE_UNIT, -ONE_UNIT);
           //print("Move %c to %c\n", x, z);
         }
@@ -143,7 +144,7 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
           drive_goto(-ONE_UNIT, -ONE_UNIT);
           //print("Move %c to %c\n", x, z);
         }
-        else {
+        else if (z == 'A') {
           drive_goto(-TWO_UNIT, -TWO_UNIT);
           //print("Move %c to %c\n", x, z);
         }
