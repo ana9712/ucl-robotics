@@ -10,7 +10,7 @@ This programme solves the Towers of Hanoi game using a robot to signal a move of
 #include "librobot.h"
 
 #define NO_OF_DISKS 3
-#define START_PEG 'A'
+#define START_PEG 'C'
 
 const int ONE_UNIT = 130; // 210mm, width of A4-size paper
 const int TWO_UNIT = 260; // 420mm, width of 2 A4-size paper
@@ -154,8 +154,8 @@ void towerOfHanoi(int n, char x, char y, char z, char t) {
     }
   }
   else {
-    towerOfHanoi(n-1, x, z, y, y);
-    towerOfHanoi(1, x, y, z, z);
+    towerOfHanoi(n-1, x, z, y, z);
+    towerOfHanoi(1, x, y, z, y);
     towerOfHanoi(n-1, y, x, z, z);
   }
 }
