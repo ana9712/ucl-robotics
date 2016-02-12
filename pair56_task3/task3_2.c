@@ -6,167 +6,108 @@ This programme solves the Towers of Hanoi game using a robot to signal a move of
 #include "simpletools.h"
 #include "abdrive.h"
 #include <stdio.h>
-#include <stdbool.h>
 #include "librobot.h"
 
-#define NO_OF_DISKS 4
-#define START_PEG 'B'
+#define NO_OF_DISKS 3
+#define START_PEG 'A'
 
-const int ONE_UNIT = 130; // 210mm, width of A4-size paper
-const int TWO_UNIT = 260; // 420mm, width of 2 A4-size paper
+const int ONE_UNIT = 130; // 210mm, width of 2 A4-size paper
+const int TWO_UNIT = 260; // 420mm, width of 4 A4-size paper
+const int THREE_UNIT = 390; // 630mm, width of 6 A4-size paper
 
-bool firstTime = true;
-
-/*int getNumberOfDisks() {
-  printf("How many disk?\n");
-  while(1) {
-    int n;
-    scanf("%i", &n);
-    if (n>0) {
-      return n;
-    }
-    else {
-      print("You did not input a valid positive integer. Try again\n");
-      print("How many disk?");
-    }
-  }
+// On LED for two seconds
+void signalStart() {
+  high(26);
+  pause(2000);
+  low(26);
 }
 
-char getStartPeg() {
-  print("Now, on which peg do you want the disks to start from? A? B? or C?");
-  while(1) {
-    char c;
-    scanf("%c", &c);
-    if (c == 'A' || c == 'B' || c =='C') {
-      return c;
-    }
-    else {
-      print("You did not input a valid character. Input A, B or C.\n");
-      print("Which peg do you want the disk to start from?\n");
-    }
-  }
-}*/
+// Turn left to face in then turn back right.
+void signalEnd() {
+  turn_pivot_function(-90);
+  turn_pivot_function(90);
+}
 
-  // On LED for two seconds
-  void signalStart() {
-    high(26);
-    pause(2000);
-    low(26);
-  }
+void towerOfHanoi(int n, char x, char y, char z) {
 
-  // Turn left to face in then turn back right.
-  void signalEnd() {
-    turn_pivot_function(-90);
-    turn_pivot_function(90);
-  }
-
-
-void towerOfHanoi(int n, char x, char y, char z, char t) {
-
-  // Need to move disk
+  // Need to move disk.
   if (n == 1) {
-    // Robot start at peg that has stacked disks.
-    if (!firstTime) {
-      // Move from previous Z (previous End peg) to current X (Start peg).
-      switch(t) {
 
-        case 'A':
-          if (x == 'B') {
-            drive_goto(ONE_UNIT, ONE_UNIT);
-            //print("Move to %c\n", x);
-          }
-          else if (x == 'C') {
-            drive_goto(TWO_UNIT, TWO_UNIT);
-            //print("Move to %c\n", x);
-          }
-          break;
-
-        case 'B':
-          if (x == 'C') {
-            drive_goto(ONE_UNIT, ONE_UNIT);
-            //print("Move to %c\n", x);
-          }
-          else if (x == 'A') {
-            drive_goto(-ONE_UNIT, -ONE_UNIT);
-            //print("Move to %c\n", x);
-          }
-          break;
-
-        case 'C':
-          if (x == 'B') {
-            drive_goto(-ONE_UNIT, -ONE_UNIT);
-            //print("Move to %c\n", x);
-          }
-          else if (x == 'A'){
-            drive_goto(-TWO_UNIT, -TWO_UNIT);
-            //print("Move to %c\n", x);
-          }
-          break;
-
-        default: break;
-      }
-    }
-
-    firstTime = false;
-
-    // Move from current X (Start peg) to current Z (End peg).
+    // Move from Start Point to Start Peg.
     switch (x) {
-
       case 'A':
+        drive_goto(ONE_UNIT, ONE_UNIT);
         signalStart();
-        if (z == 'B') {
-          drive_goto(ONE_UNIT, ONE_UNIT);
-          //print("Move %c to %c\n", x, z);
-        }
-        else if (z == 'C') {
-          drive_goto(TWO_UNIT, TWO_UNIT);
-          //print("Move %c to %c\n", x, z);
-        }
-        signalEnd();
         break;
 
       case 'B':
+        drive_goto(TWO_UNIT, TWO_UNIT);
         signalStart();
-        if (z == 'C') {
-          drive_goto(ONE_UNIT, ONE_UNIT);
-          //print("Move %c to %c\n", x, z);
-        }
-        else if (z == 'A') {
-          drive_goto(-ONE_UNIT, -ONE_UNIT);
-          //print("Move %c to %c\n", x, z);
-        }
-        signalEnd();
         break;
 
       case 'C':
+        drive_goto(THREE_UNIT, THREE_UNIT);
         signalStart();
-        if (z == 'B') {
+        break;
+
+      default: break;
+    }
+
+    // Move from Start Peg to End Peg and move back to Start Point.
+    switch (z) {
+      case 'A':
+        if (x == 'C') {
+          drive_goto(-TWO_UNIT,-TWO_UNIT);
+          signalEnd();
           drive_goto(-ONE_UNIT, -ONE_UNIT);
-          //print("Move %c to %c\n", x, z);
         }
-        else if (z == 'A') {
+        else if (x == 'B') {
+          drive_goto(-ONE_UNIT, -ONE_UNIT);
+          signalEnd();
+          drive_goto(-ONE_UNIT, -ONE_UNIT);
+        }
+        break;
+
+      case 'B':
+        if (x == 'A') {
+          drive_goto(ONE_UNIT, ONE_UNIT);
+          signalEnd();
           drive_goto(-TWO_UNIT, -TWO_UNIT);
-          //print("Move %c to %c\n", x, z);
         }
-        signalEnd();
+        else if (x == 'C') {
+          drive_goto(-ONE_UNIT, -ONE_UNIT);
+          signalEnd();
+          drive_goto(-TWO_UNIT, -TWO_UNIT);
+        }
+        break;
+
+      case 'C':
+        if (x == 'B') {
+          drive_goto(ONE_UNIT, ONE_UNIT);
+          signalEnd();
+          drive_goto(-THREE_UNIT, -THREE_UNIT);
+        }
+        else if (x == 'A') {
+          drive_goto(TWO_UNIT, TWO_UNIT);
+          signalEnd();
+          drive_goto(-THREE_UNIT, -THREE_UNIT);
+        }
         break;
 
       default: break;
     }
   }
   else {
-    towerOfHanoi(n-1, x, z, y, z);
-    towerOfHanoi(1, x, y, z, y);
-    towerOfHanoi(n-1, y, x, z, z);
+    towerOfHanoi(n-1, x, z, y);
+    towerOfHanoi(1, x, y, z);
+    towerOfHanoi(n-1, y, x, z);
   }
 }
 
 
 int main() {
-//int n = getNumberOfDisks();
-//char c = getStartPeg(), x, y, z, t;
 int n = NO_OF_DISKS;
-char c = START_PEG, x, y, z, t;
+char c = START_PEG, x, y, z;
 
 /*  Sort pegs
     Start at A, end at C.
@@ -195,8 +136,8 @@ switch (c) {
 
   default: break;
 }
-towerOfHanoi(n, x, y, z, t);
-// Turn right to signal end of algorithm.
+towerOfHanoi(n, x, y, z);
+
+// Turn right, signal end of algorithm.
 turn_pivot_function(90);
-//print("Tower of Hanoi solved.\n");
 }
