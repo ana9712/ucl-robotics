@@ -12,8 +12,8 @@ This programme solves the Towers of Hanoi game using a robot to signal a move of
 #define NO_OF_DISKS 3
 #define START_PEG 'A'
 
-const int ONE_UNIT = 65; // 210mm, width of A4-size paper
-const int TWO_UNIT = 130; // 420mm, width of 2 A4-size paper
+const int ONE_UNIT = 130; // 210mm, width of A4-size paper
+const int TWO_UNIT = 260; // 420mm, width of 2 A4-size paper
 
 bool firstTime = true;
 
