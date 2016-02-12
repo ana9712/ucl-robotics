@@ -12,6 +12,7 @@ compileLibrobot: librobot.c
 	$(PROPGCC) $(LIBS) -Os -mcmm -m32bit-doubles -fno-exceptions -std=c99 -c librobot.c -o cmm/librobot.o
 
 loadProg: ${FILENAME}.c
+	rm cmm/*
 	make compileLibrobot
 	$(PROPGCC) $(LIBS) -o cmm/${FILENAME}.elf $(CFLAGS) cmm/librobot.o ${FILENAME}.c -lm -lsimpletools -lsimpletext -lsimplei2c -labdrive -lfdserial -lm -lsimpletools -lsimpletext -lsimplei2c -labdrive -lm -lsimpletools -lsimpletext -lsimplei2c -lm -lsimpletools -lsimpletext -lm -lsimpletools -lm
 	$(PROPLOAD) -s cmm/${FILENAME}.elf

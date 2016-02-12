@@ -3,14 +3,17 @@
 #define _START_PEG 'C'
 #define _NO_OF_DISKS 4
 
+const int ONE_UNIT = 130;
+
 char pos = _START_PEG;
 
 void move_disc(char source, char dest) {
     char dist = source - pos;
-    printf("Moving %d units to %c\n",(int)dist,source);
+    printf("Moving %d units to %c\n",dist*ONE_UNIT,source);
     printf("Pickup a disk\n");
     dist = dest - source;
-    printf("Moving %d units to %c\n",(int)dist,dest);
+    printf("Moving %d units to %c\n",dist*ONE_UNIT,dest);
+    printf("Drop a disk.\n");
     pos = dest;
 }
 

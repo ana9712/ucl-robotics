@@ -10,6 +10,7 @@ const int ONE_UNIT = 130;
 
 char pos = _START_PEG;
 
+// signal a pick up.
 void signalStart() {
   high(26);
   pause(2000);
@@ -24,12 +25,14 @@ void signalEnd() {
 
 void move_disc(char source, char dest) {
     char dist = source - pos;
-    printf("Moving %d units to %c\n",(int)dist,source);
+    printf("Moving %d units to %c\n",dist*ONE_UNIT,source);
     drive_goto(ONE_UNIT*dist,ONE_UNIT*pos);
+    printf("Pickup a disk\n");
     signalStart();
     dist = dest - source;
-    printf("Moving %d units to %c\n",(int)dist,dest);
+    printf("Moving %d units to %c\n",dist*ONE_UNIT,dest);
     drive_goto(ONE_UNIT*dist,ONE_UNIT*pos);
+    printf("Drop a disk.\n");
     signalEnd();
     pos = dest;
 }
