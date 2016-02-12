@@ -3,8 +3,8 @@
 #include "abdrive.h"
 #include "librobot.h"
 
-#define _START_PEG 'C'
-#define _NO_OF_DISKS 4
+#define _START_PEG 'A'
+#define _NO_OF_DISKS 3
 
 const int ONE_UNIT = 130;
 
