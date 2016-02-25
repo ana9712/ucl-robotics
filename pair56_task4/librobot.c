@@ -21,6 +21,7 @@ void turn_function(int angle) {
         left_wheel = calculate_arc_length(angle);
     }
     else if (angle < 0) {
+        angle = -angle;
         left_wheel = 0;
         right_wheel = calculate_arc_length(angle);
     }
