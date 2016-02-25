@@ -10,11 +10,11 @@ int distance = 20;
 int main() {
     while(distance > 10)
     {
-        drive_goto(50,50);
+        drive_ramp(50,50);
         distance = ping_cm(8);
         print("%c distance = %d%c cm",
                 HOME, distance, CLREOL);
         pause(200);
     }
-    drive_goto(0,0);
+    drive_ramp(0,0);
 }
