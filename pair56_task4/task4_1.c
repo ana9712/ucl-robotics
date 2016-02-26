@@ -1,6 +1,6 @@
 /*
-  Blank Simple Project.c
-  http://learn.parallax.com/propeller-c-tutorials
+  Created by Matthew Bell and Wayne Tsui.
+  This programme sets a robot to curve along a left wall and stops when an obstacle is 5cm ahead of it.
 */
 
 #include "simpletools.h"
@@ -8,48 +8,61 @@
 #include "librobot.h"
 #include "ping.h"
 
-#define _PROPELLER_IO_PIN 8
+int stoppingDist = 5;
+int distance;
+
+int check_dist() {
+  distance = ping_cm(8);
+  if (distance < stoppingDist)
+    return 1;
+  else return 0;
+}  
 
 int main() {
 
   //int distance; setPoint = 10 , errorVal, kp = -10, speed;
   int irLeft, irRight;
-  int distance;
-  int stoppingDist = 5;
+
+  int leftSpd = 10;
+  int rightSpd = 10;
 
   low(26);
   low(27);
-
-  drive_setRampStep(10);
+  
   while(1) {
-    distance = ping_cm(8);
-  if (distance > 5) {
-    /*
-    print("%c distance = %d%c cm",            // Display distance
-           HOME, distance, CLREOL);
+    
+    if (check_dist() == 0) {
 
-    pause(200);                               // Wait 1/5 second
-    */
+      freqout(11, 1, 38000);                      // Left IR LED light
+      irLeft = input(10);                         // Get Left IR LED light input
 
-    freqout(11, 1, 38000);                      // Left IR LED light
-    irLeft = input(10);
+      //freqout(1, 1, 38000);                     // Repeat for right detector
+      //irRight = input(2);
 
-    //freqout(1, 1, 38000);                       // Repeat for right detector
-    //irRight = input(2);
+      while (irLeft == 0) {
+        leftSpd = leftSpd + 1;
+        drive_speed(leftSpd,rightSpd);
+        freqout(11, 1, 38000);                     
+        irLeft = input(10);
+        if (check_dist() == 1) {
+          break;
+        }                   
+      }
+      leftSpd = 10;
+      while (irLeft == 1) {
+        rightSpd = rightSpd + 1;
+        drive_speed(leftSpd,rightSpd);
+        freqout(11, 1, 38000);                     
+        irLeft = input(10);
+        if (check_dist() == 1) {
+          break;
+        }            
+      }
+      rightSpd = 10;
 
-    if (irLeft == 0) {
-      turn_function(7);
     }
-    else if (irLeft == 1) {
-      drive_goto(20,20);
-      turn_function(-9);
-    }
-
-  }
     else {
-    break;
+      break;
     }
   }
-  // Stop infront of obstacle.
-  drive_ramp(0, 0);
 }
