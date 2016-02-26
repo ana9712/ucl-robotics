@@ -39,31 +39,31 @@ void turn_pivot_function(int angle) {
     return;
 }
 
-float* distance_wheels_travelled() {
+double* distance_wheels_travelled() {
   int* ticksArr = malloc(2 * sizeof(int));
   drive_getTicks(*ticksArr, *(ticksArr+1));
-  float* distanceWheelsTravelled = malloc(2 * sizeof(float));
+  double* distanceWheelsTravelled = malloc(2 * sizeof(double));
   *distanceWheelsTravelled = (*ticksArr/_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;
   *(distanceWheelsTravelled+1) = (*(ticksArr+1)/_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;
   free(ticksArr);
   return distanceWheelsTravelled;
 }
 
-float angle_change(float* distanceWheelsTravelled) {
+double angle_change(double* distanceWheelsTravelled) {
   return (*distanceWheelsTravelled - *(distanceWheelsTravelled+1)) / _WHEEL_BASE;
 }
 
-float radius_middle(float* distanceWheelsTravelled) {
-  float angleChange = angle_change(distanceWheelsTravelled);
-  float radiusLeft = *distanceWheelsTravelled/angleChange;
-  float radiusRight = *(distanceWheelsTravelled+1)/angleChange;
+double radius_middle(double* distanceWheelsTravelled) {
+  double angleChange = angle_change(distanceWheelsTravelled);
+  double radiusLeft = *distanceWheelsTravelled/angleChange;
+  double radiusRight = *(distanceWheelsTravelled+1)/angleChange;
   return (radiusLeft + radiusRight) / 2;
 }
 
-float* position_change(float* distanceWheelsTravelled, float currentAngle) {
-  float* positionCoordinates = malloc(2 * sizeof(float));
-  float radiusMiddle = radius_middle(distanceWheelsTravelled);
-  float angleChange = angle_change(distanceWheelsTravelled);
+double* position_change(double* distanceWheelsTravelled, double currentAngle) {
+  double* positionCoordinates = malloc(2 * sizeof(double));
+  double radiusMiddle = radius_middle(distanceWheelsTravelled);
+  double angleChange = angle_change(distanceWheelsTravelled);
   *positionCoordinates = radiusMiddle*cos(currentAngle) - radiusMiddle*cos(currentAngle+angleChange);
   *(positionCoordinates + 1) = radiusMiddle*sin(currentAngle+angleChange) - radiusMiddle*sin(currentAngle);
   return positionCoordinates;
