@@ -45,8 +45,8 @@ int main()
 int main() {
   int distance, stoppingDist = 5;
   int setPoint = 12;
-  int errorVal, prevErrorVal, totalErrorVal = 0;
-  int kp = -12, ki = -10;
+  int errorVal, prevErrorVal, totalErrorVal = 0, errorDiff = 0;
+  int kp = -12, ki = -10, kd = -10;
   int baseSpd = 128, correctionSpd;
   int irLeft = 0, irRight = 0;
   
@@ -77,7 +77,10 @@ int main() {
       // If robot moves from too far left/right to too far right/left, without hitting optimal setPoint, reset totalErrorVal.
       if ((prevErrorVal > 0 && errorVal <= 0) || (prevErrorVal < 0 && errorVal >= 0)) {
          totalErrorVal = 0;
-      }     
+      }
+      
+      // Measure difference in error values to turn more responsively at sharp turns.
+      errorDiff = errorVal - prevErrorVal;     
       
       prevErrorVal = errorVal;        
       
@@ -91,18 +94,12 @@ int main() {
       if (errorVal == 0) {
 
         // Move straight.
-//        totalErrorVal = 0;
         drive_speed(baseSpd, baseSpd);
 
       }
-      else {
-        
-//        // If robot moves from too far left/right to too far right/left, without hitting optimal setPoint, reset totalErrorVal.
-//        if ((prevErrorVal > 0 && errorVal < 0) || (prevErrorVal < 0 && errorVal > 0)) {
-//          totalErrorVal = 0;
-//        }          
+      else {        
 
-        correctionSpd = (kp * errorVal) + (ki * totalErrorVal);
+        correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
         
         if (correctionSpd > baseSpd/3) {
           correctionSpd = baseSpd/3;
