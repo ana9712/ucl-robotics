@@ -46,8 +46,8 @@ int main() {
   int distance, stoppingDist = 5;
   int setPoint = 12;
   int errorVal, prevErrorVal, totalErrorVal = 0;
-  int kp = -6, ki = -2;
-  int baseSpd = 64, correctionSpd;
+  int kp = -12, ki = -10;
+  int baseSpd = 128, correctionSpd;
   int irLeft = 0, irRight = 0;
   
   low(26);                                   
@@ -104,14 +104,15 @@ int main() {
 
         correctionSpd = (kp * errorVal) + (ki * totalErrorVal);
         
-        if (correctionSpd > baseSpd) {
-          correctionSpd = 32;
+        if (correctionSpd > baseSpd/3) {
+          correctionSpd = baseSpd/3;
         }
-        if (correctionSpd < -baseSpd) {
-          correctionSpd = -32;
+        if (correctionSpd < -baseSpd/3) {
+          correctionSpd = -baseSpd/3;
         }              
 
         totalErrorVal += errorVal;
+        //print("%d\n",totalErrorVal);
 
         // Robot is too far from left wall.
         if (errorVal < 0) {
