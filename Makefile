@@ -5,8 +5,7 @@ PORT=/dev/ttyUSB0
 PROPGCC=${PARALLAX_FOLDER}/bin/propeller-elf-gcc
 PROPLOAD=${PARALLAX_FOLDER}/bin/propeller-load
 PROPDUMP=${PARALLAX_FOLDER}/bin/propeller-elf-objdump
-# LIBS=-I . -L . -I ${SIMPLE_LIBRARY}/Utility/libsimpletools -L ${SIMPLE_LIBRARY}/Utility/libsimpletools/cmm/ -I ${SIMPLE_LIBRARY}/TextDevices/libsimpletext -L ${SIMPLE_LIBRARY}/TextDevices/libsimpletext/cmm/ -I ${SIMPLE_LIBRARY}/Protocol/libsimplei2c -L ${SIMPLE_LIBRARY}/Protocol/libsimplei2c/cmm/ -I ${SIMPLE_LIBRARY}/Robotics/ActivityBot/libabdrive -L ${SIMPLE_LIBRARY}/Robotics/ActivityBot/libabdrive/cmm -I ${SIMPLE_LIBRARY}/TextDevices/libfdserial -L ${SIMPLE_LIBRARY}/TextDevices/libfdserial/cmm -I ${SIMPLE_LIBRARY}/Sensor/libping -L ${SIMPLE_LIBRARY}/Sensor/libping/cmm -I ${SIMPLE_LIBRARY}/Robotics/ActivityBot/libabcalibrate -L ${SIMPLE_LIBRARY}/Robotics/ActivityBot/libabcalibrate/cmm -I ${SIMPLE_LIBRARY}/Motor/libservo -L ${SIMPLE_LIBRARY}/Motor/libservo/cmm
-LIBS=-I . -L . -I ${SIMPLE_LIBRARY}/**/* -L ${SIMPLE_LIBRARY}/**/*/cmm
+LIBS=-I . -L . -I ${SIMPLE_LIBRARY}/Utility/libsimpletools -L ${SIMPLE_LIBRARY}/Utility/libsimpletools/cmm/ -I ${SIMPLE_LIBRARY}/TextDevices/libsimpletext -L ${SIMPLE_LIBRARY}/TextDevices/libsimpletext/cmm/ -I ${SIMPLE_LIBRARY}/Protocol/libsimplei2c -L ${SIMPLE_LIBRARY}/Protocol/libsimplei2c/cmm/ -I ${SIMPLE_LIBRARY}/Robotics/ActivityBot/libabdrive -L ${SIMPLE_LIBRARY}/Robotics/ActivityBot/libabdrive/cmm -I ${SIMPLE_LIBRARY}/TextDevices/libfdserial -L ${SIMPLE_LIBRARY}/TextDevices/libfdserial/cmm -I ${SIMPLE_LIBRARY}/Sensor/libping -L ${SIMPLE_LIBRARY}/Sensor/libping/cmm -I ${SIMPLE_LIBRARY}/Robotics/ActivityBot/libabcalibrate -L ${SIMPLE_LIBRARY}/Robotics/ActivityBot/libabcalibrate/cmm -I ${SIMPLE_LIBRARY}/Motor/libservo -L ${SIMPLE_LIBRARY}/Motor/libservo/cmm
 
 CFLAGS=-mcmm -m32bit-doubles -fno-exceptions -std=c99
 
@@ -20,5 +19,5 @@ loadProg: ${FILENAME}.c
 	$(PROPGCC) $(LIBS) -o cmm/${FILENAME}.elf $(CFLAGS) cmm/librobot.o ${FILENAME}.c -lm -lsimpletools -lsimpletext -lsimplei2c -labdrive -lfdserial -lm -lsimpletools -lsimpletext -lsimplei2c -labdrive -lping -labcalibrate -lservo -lm -lsimpletools -lsimpletext -lsimplei2c -lm -lsimpletools -lsimpletext -lm -lsimpletools -lm
 	$(PROPLOAD) -s cmm/${FILENAME}.elf
 	$(PROPDUMP) -h cmm/${FILENAME}.elf
-	$(PROPLOAD) -Dreset=dtr -I ${PARALLAX_FOLDER}/propeller-load -b RCFAST cmm/${FILENAME}.elf -r -p ${PORT} -t115200
+	$(PROPLOAD) -Dreset=dtr -I ${PARALLAX_FOLDER}/propeller-load -e -b RCFAST cmm/${FILENAME}.elf -r -p ${PORT} -T115200
 

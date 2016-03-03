@@ -19,5 +19,5 @@ loadProg: ${FILENAME}.c
 	$(PROPGCC) $(LIBS) -o cmm/${FILENAME}.elf $(CFLAGS) cmm/librobot.o ${FILENAME}.c -lm -lsimpletools -lsimpletext -lsimplei2c -labdrive -lfdserial -lm -lsimpletools -lsimpletext -lsimplei2c -labdrive -lping -labcalibrate -lservo -lm -lsimpletools -lsimpletext -lsimplei2c -lm -lsimpletools -lsimpletext -lm -lsimpletools -lm
 	$(PROPLOAD) -s cmm/${FILENAME}.elf
 	$(PROPDUMP) -h cmm/${FILENAME}.elf
-	$(PROPLOAD) -Dreset=dtr -I ${PARALLAX_FOLDER}/propeller-load -b RCFAST cmm/${FILENAME}.elf -r -p ${PORT} -t115200
+	$(PROPLOAD) -Dreset=dtr -I ${PARALLAX_FOLDER}/propeller-load -e -b RCFAST cmm/${FILENAME}.elf -r -p ${PORT} -T115200
 
