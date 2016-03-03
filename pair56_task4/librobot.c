@@ -61,10 +61,16 @@ double radius_middle(double* distanceWheelsTravelled) {
 }
 
 double* position_change(double* distanceWheelsTravelled, double currentAngle) {
-  double* positionCoordinates = malloc(2 * sizeof(double));
+  double* positionCoordinates = malloc(3 * sizeof(double));
   double radiusMiddle = radius_middle(distanceWheelsTravelled);
   double angleChange = angle_change(distanceWheelsTravelled);
   *positionCoordinates = radiusMiddle*cos(currentAngle) - radiusMiddle*cos(currentAngle+angleChange);
   *(positionCoordinates + 1) = radiusMiddle*sin(currentAngle+angleChange) - radiusMiddle*sin(currentAngle);
+  *(positionCoordinates + 2) = angleChange;
   return positionCoordinates;
+}
+
+double distance_travelled(double* positionCoordinates) {
+  // Pythagora's theorem
+  return sqrt(pow(*positionCoordinates, 2) + pow(*(positionCoordinates + 1), 2));
 }

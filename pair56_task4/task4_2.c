@@ -18,8 +18,8 @@ int irLeft, irRight;
 
 int main()
 {
-  low(26);                                   
-  low(27);                                   
+  low(26);
+  low(27);
 
   while(1)
   {
@@ -31,8 +31,8 @@ int main()
       dac_ctr(26, 0, dacVal);                       // <- add
       freqout(11, 1, 38000);                        // <- add
       irLeft += input(10);                          // <- modify
-  
-      
+
+
     }                                               // <- add
 
     print("%c irLeft = %d%c",         // <- modify
@@ -49,10 +49,13 @@ int main() {
   int kp = -6, ki = -2, kd = -4;
   int baseSpd = 128, correctionSpd;
   int irLeft = 0, irRight = 0;
-  
-  low(26);                                   
+  double* distanceWheelsTravelled = malloc(2 * sizeof(double));
+  double* positionCoordinates = malloc(3 * sizeof(double));
+  double distanceTravelled = 0;
+
+  low(26);
   low(27);
-  
+
   while(1) {
 
     // Check front distance.
@@ -73,22 +76,22 @@ int main() {
       }
 
       errorVal = setPoint - irLeft;
-      
+
       // If robot moves from too far left/right to too far right/left, without hitting optimal setPoint, reset totalErrorVal.
       if ((prevErrorVal > 0 && errorVal <= 0) || (prevErrorVal < 0 && errorVal >= 0)) {
          totalErrorVal = 0;
       }
-      
+
       // Measure difference in error values to turn more responsively at sharp turns.
-      errorDiff = errorVal - prevErrorVal;     
-      
-      prevErrorVal = errorVal;        
-      
+      errorDiff = errorVal - prevErrorVal;
+
+      prevErrorVal = errorVal;
+
       // Reset distance measurement.
       irLeft = 0;
       irRight = 0;
       //print("%d\n", errorVal);
-      
+
 
       // Robot is 10cm away from left wall, optimal.
       if (errorVal == 0) {
@@ -96,17 +99,23 @@ int main() {
         // Move straight.
         drive_speed(baseSpd, baseSpd);
 
+        // To display distance travelled and angle, with respect to starting position.
+        distanceWheelsTravelled = distance_wheels_travelled();
+        positionCoordinates = position_change(distanceWheelsTravelled, 0);
+        distanceTravelled = distance_travelled(positionCoordinates);
+        print("Distance travelled: %.2f. Angle from start point: %.2f degrees.", distanceTravelled, *(positionCoordinates+2));
+
       }
-      else {        
+      else {
 
         correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
-        
+
         if (correctionSpd > baseSpd/3) {
           correctionSpd = baseSpd/3;
         }
         if (correctionSpd < -baseSpd/3) {
           correctionSpd = -baseSpd/3;
-        }              
+        }
 
         totalErrorVal += errorVal;
         //print("%d\n",totalErrorVal);
@@ -115,12 +124,24 @@ int main() {
         if (errorVal < 0) {
           // Move left, correctionSpd is positive.
           drive_speed(baseSpd-correctionSpd, baseSpd);
+
+          // To display distance travelled and angle, with respect to starting position.
+          distanceWheelsTravelled = distance_wheels_travelled();
+          positionCoordinates = position_change(distanceWheelsTravelled, 0);
+          distanceTravelled = distance_travelled(positionCoordinates);
+          print("Distance travelled: %.2f. Angle from start point: %.2f degrees.", distanceTravelled, *(positionCoordinates+2));
         }
 
         // Robot is too near to left wall.
         else if (errorVal > 0) {
           // Move right, correctionSpd is negative.
           drive_speed(baseSpd, baseSpd+correctionSpd);
+
+          // To display distance travelled and angle, with respect to starting position.
+          distanceWheelsTravelled = distance_wheels_travelled();
+          positionCoordinates = position_change(distanceWheelsTravelled, 0);
+          distanceTravelled = distance_travelled(positionCoordinates);
+          print("Distance travelled: %.2f. Angle from start point: %.2f degrees.", distanceTravelled, *(positionCoordinates+2));
         }
       }
     }
