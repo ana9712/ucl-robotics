@@ -8,61 +8,128 @@
 #include "librobot.h"
 #include "ping.h"
 
-int stoppingDist = 5;
-int distance;
+/*
+  Test IR Detectors for Distance.c
+*/
+/*
+#include "simpletools.h"
 
-int check_dist() {
-  distance = ping_cm(8);
-  if (distance < stoppingDist)
-    return 1;
-  else return 0;
-}  
+int irLeft, irRight;
+
+int main()
+{
+  low(26);                                   
+  low(27);                                   
+
+  while(1)
+  {
+    irLeft = 0;                                     // <- add
+    irRight = 0;                                    // <- add
+
+    for(int dacVal = 0; dacVal < 160; dacVal += 8)  // <- add
+    {                                               // <- add
+      dac_ctr(26, 0, dacVal);                       // <- add
+      freqout(11, 1, 38000);                        // <- add
+      irLeft += input(10);                          // <- modify
+  
+      
+    }                                               // <- add
+
+    print("%c irLeft = %d%c",         // <- modify
+           HOME,   irLeft, CLREOL);        // <- modify
+    pause(100);
+  }
+}
+*/
 
 int main() {
-
-  //int distance; setPoint = 10 , errorVal, kp = -10, speed;
-  int irLeft, irRight;
-
-  int leftSpd = 10;
-  int rightSpd = 10;
-
-  low(26);
+  int distance, stoppingDist = 5;
+  int setPoint = 12;
+  int errorVal, prevErrorVal, totalErrorVal = 0;
+  int kp = -6, ki = -2;
+  int baseSpd = 64, correctionSpd;
+  int irLeft = 0, irRight = 0;
+  
+  low(26);                                   
   low(27);
   
   while(1) {
-    
-    if (check_dist() == 0) {
 
-      freqout(11, 1, 38000);                      // Left IR LED light
-      irLeft = input(10);                         // Get Left IR LED light input
+    // Check front distance.
+    distance = ping_cm(8);
 
-      //freqout(1, 1, 38000);                     // Repeat for right detector
-      //irRight = input(2);
+    // No obstacle within 5cm, can move forward.
+    if (distance > stoppingDist) {
 
-      while (irLeft == 0) {
-        leftSpd = leftSpd + 1;
-        drive_speed(leftSpd,rightSpd);
-        freqout(11, 1, 38000);                     
-        irLeft = input(10);
-        if (check_dist() == 1) {
-          break;
-        }                   
+      // Get left wall distance, irLeft. 0<=irLeft<=20. Higher irLeft means object further.
+      for (int dacVal = 0; dacVal < 160; dacVal += 8) {
+        dac_ctr(26, 0, dacVal);
+        freqout(11, 1, 38000);
+        irLeft += input(10);                          // Left side IR-sensor
+
+        //dac_ctr(27, 1, dacVal);
+        //freqout(1, 1, 38000);
+        //irRight += input(2);                          // Right side IR-sensor
       }
-      leftSpd = 10;
-      while (irLeft == 1) {
-        rightSpd = rightSpd + 1;
-        drive_speed(leftSpd,rightSpd);
-        freqout(11, 1, 38000);                     
-        irLeft = input(10);
-        if (check_dist() == 1) {
-          break;
-        }            
-      }
-      rightSpd = 10;
 
+      errorVal = setPoint - irLeft;
+      
+      // If robot moves from too far left/right to too far right/left, without hitting optimal setPoint, reset totalErrorVal.
+      if ((prevErrorVal > 0 && errorVal <= 0) || (prevErrorVal < 0 && errorVal >= 0)) {
+         totalErrorVal = 0;
+      }     
+      
+      prevErrorVal = errorVal;        
+      
+      // Reset distance measurement.
+      irLeft = 0;
+      irRight = 0;
+      //print("%d\n", errorVal);
+      
+
+      // Robot is 10cm away from left wall, optimal.
+      if (errorVal == 0) {
+
+        // Move straight.
+//        totalErrorVal = 0;
+        drive_speed(baseSpd, baseSpd);
+
+      }
+      else {
+        
+//        // If robot moves from too far left/right to too far right/left, without hitting optimal setPoint, reset totalErrorVal.
+//        if ((prevErrorVal > 0 && errorVal < 0) || (prevErrorVal < 0 && errorVal > 0)) {
+//          totalErrorVal = 0;
+//        }          
+
+        correctionSpd = (kp * errorVal) + (ki * totalErrorVal);
+        
+        if (correctionSpd > baseSpd) {
+          correctionSpd = 32;
+        }
+        if (correctionSpd < -baseSpd) {
+          correctionSpd = -32;
+        }              
+
+        totalErrorVal += errorVal;
+
+        // Robot is too far from left wall.
+        if (errorVal < 0) {
+          // Move left, correctionSpd is positive.
+          drive_speed(baseSpd-correctionSpd, baseSpd);
+        }
+
+        // Robot is too near to left wall.
+        else if (errorVal > 0) {
+          // Move right, correctionSpd is negative.
+          drive_speed(baseSpd, baseSpd+correctionSpd);
+        }
+      }
     }
+
+    // Obstacle within 5cm, cannot move forward, stop.
     else {
-      break;
+      drive_speed(0, 0);
     }
   }
 }
