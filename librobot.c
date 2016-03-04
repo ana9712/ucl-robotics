@@ -40,10 +40,11 @@ void turn_pivot_function(int angle) {
 }
 
 double* distance_wheels_travelled() {
-  int* ticksArr = malloc(2 * sizeof(int));
-  drive_getTicks(*ticksArr, *(ticksArr+1));
+  int* ticksArr = (int*)malloc(2 * sizeof(int));
+  drive_getTicks(ticksArr, (ticksArr+1));
+  print("%d %d\n", *ticksArr, *(ticksArr+1));
   double* distanceWheelsTravelled = malloc(2 * sizeof(double));
-  *distanceWheelsTravelled = (*ticksArr/_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;
+  *distanceWheelsTravelled = (*ticksArr * 1.0f /_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;
   *(distanceWheelsTravelled+1) = (*(ticksArr+1)/_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;
   free(ticksArr);
   return distanceWheelsTravelled;
@@ -66,11 +67,15 @@ double* position_change(double* distanceWheelsTravelled, double currentAngle) {
   double angleChange = angle_change(distanceWheelsTravelled);
   *positionCoordinates = radiusMiddle*cos(currentAngle) - radiusMiddle*cos(currentAngle+angleChange);
   *(positionCoordinates + 1) = radiusMiddle*sin(currentAngle+angleChange) - radiusMiddle*sin(currentAngle);
-  *(positionCoordinates + 2) = angleChange;
+  *(positionCoordinates + 2) = angleChange; // angle in radian
   return positionCoordinates;
 }
 
 double distance_travelled(double* positionCoordinates) {
   // Pythagora's theorem
   return sqrt(pow(*positionCoordinates, 2) + pow(*(positionCoordinates + 1), 2));
+}
+
+void log_write(FILE* fp, double* position_coords) {
+    fprintf(fp, "Position: (%f, %f). Angle: %f", position_coords[0], position_coords[1], position_coords[2] * PI/180);
 }
