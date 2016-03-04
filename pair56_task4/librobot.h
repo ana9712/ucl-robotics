@@ -17,6 +17,11 @@
 #define _WHEEL_RADIUS 30.0 // Need to change
 #define _ENCODER_CLICKS_PER_FULL_TURN 64
 
+#define DO 22
+#define CLK 23
+#define DI 24
+#define CS 25
+
 int calculate_arc_length(int angle);
 
 int calculate_pivot_length(int angle);
