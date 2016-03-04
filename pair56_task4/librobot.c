@@ -44,7 +44,7 @@ double* distance_wheels_travelled() {
   drive_getTicks(ticksArr, (ticksArr+1));
   print("%d %d\n", *ticksArr, *(ticksArr+1));
   double* distanceWheelsTravelled = malloc(2 * sizeof(double));
-  *distanceWheelsTravelled = (*ticksArr/_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;
+  *distanceWheelsTravelled = (*ticksArr * 1.0f /_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;
   *(distanceWheelsTravelled+1) = (*(ticksArr+1)/_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;
   free(ticksArr);
   return distanceWheelsTravelled;
