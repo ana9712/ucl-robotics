@@ -153,17 +153,28 @@ int main() {
     else {
       drive_speed(0, 0);
       if (flag == 1) {
-      // To display distance travelled and angle, with respect to starting position.
-      distanceWheelsTravelled = distance_wheels_travelled();
+        // To display distance travelled and angle, with respect to starting position.
+        distanceWheelsTravelled = distance_wheels_travelled();
 
-      // test if function returns the distances of each wheel ie. if getTicks work.
-      print("%.2f %.2f\n", *distanceWheelsTravelled, *(distanceWheelsTravelled+1));
+        // test if function returns the distances of each wheel ie. if getTicks work.
+        print("Left wheel moved: %.2f mm. Right wheel moved: %.2f mm.\n", *distanceWheelsTravelled, *(distanceWheelsTravelled+1));
 
-      positionCoordinates = position_change(distanceWheelsTravelled, 0);
-      print("Position X: %.2f Position Y: %.2f\n", *positionCoordinates, *(positionCoordinates+1));
-      distanceTravelled = distance_travelled(positionCoordinates);
-      print("Distance travelled: %.2f mm. Angle from start point: %.2f degrees.\n", distanceTravelled, *(positionCoordinates+2) * PI/180);
-      flag = 0;
+        positionCoordinates = position_change(distanceWheelsTravelled, 0);
+        print("Position X: %.2f Position Y: %.2f\n", *positionCoordinates, *(positionCoordinates+1));
+        
+        distanceTravelled = distance_travelled(positionCoordinates);
+        print("Distance travelled: %.2f mm. Angle from start point: %.2f degrees.\n", distanceTravelled, *(positionCoordinates+2) * PI/180);
+        
+        // Execute print values only once when robot stops.
+        flag = 0;
+        
+        // Test code for SD Card
+        /*
+        sd_mount(DO, CLK, DI, CS);
+        FILE* fp = fopen("task4_2.txt", "w");
+        log_write(fp, positionCoordinates);
+        fclose(fp);
+        */
       }
     }
   }
