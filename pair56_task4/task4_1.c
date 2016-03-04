@@ -49,6 +49,9 @@ int main() {
   int kp = -8, ki = -3, kd = -3;
   int baseSpd = 86, correctionSpd;
   int irLeft = 0, irRight = 0;
+
+  sd_mount(DO, CLK, DI, CS);
+  FILE* log_file = fopen("robot_log.txt", "w");
   
   low(26);                                   
   low(27);
@@ -124,11 +127,15 @@ int main() {
           drive_speed(baseSpd, baseSpd+correctionSpd);
         }
       }
+      // CHANGE POSITION VARIABLE NAME
+      //log_write(log_file, position_coords);
     }
 
     // Obstacle within 5cm, cannot move forward, stop.
     else {
       drive_speed(0, 0);
+      break;
     }
   }
+  fclose(log_file);
 }
