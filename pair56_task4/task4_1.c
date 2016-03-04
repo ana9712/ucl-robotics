@@ -127,6 +127,8 @@ int main() {
           drive_speed(baseSpd, baseSpd+correctionSpd);
         }
       }
+      // CHANGE POSITION VARIABLE NAME
+      //log_write(log_file, position_coords);
     }
 
     // Obstacle within 5cm, cannot move forward, stop.
