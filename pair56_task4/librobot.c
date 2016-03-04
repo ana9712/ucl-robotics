@@ -40,8 +40,8 @@ void turn_pivot_function(int angle) {
 }
 
 double* distance_wheels_travelled() {
-  int* ticksArr = malloc(2 * sizeof(int));
-  drive_getTicks(*ticksArr, *(ticksArr+1));
+  int* ticksArr = (int *)malloc(2 * sizeof(int));
+  drive_getTicks(ticksArr, (ticksArr+1));
   double* distanceWheelsTravelled = malloc(2 * sizeof(double));
   *distanceWheelsTravelled = (*ticksArr/_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;
   *(distanceWheelsTravelled+1) = (*(ticksArr+1)/_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;

@@ -54,7 +54,7 @@ int main() {
   double* distanceWheelsTravelled = (double*)malloc(2 * sizeof(double));
   double* positionCoordinates = (double*)malloc(3 * sizeof(double));
   double distanceTravelled = 0;
-  drive_getTicks(*distanceWheelsTravelled, *(distanceWheelsTravelled+1));
+  drive_getTicks(distanceWheelsTravelled, (distanceWheelsTravelled+1));
   
   low(26);                                   
   low(27);
