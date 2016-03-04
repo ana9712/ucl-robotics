@@ -44,10 +44,10 @@ int main()
 
 int main() {
   int distance, stoppingDist = 5;
-  int setPoint = 12;
+  int setPoint = 13;
   int errorVal, prevErrorVal, totalErrorVal = 0, errorDiff = 0;
-  int kp = -6, ki = -2, kd = -4;
-  int baseSpd = 128, correctionSpd;
+  int kp = -8, ki = -3, kd = -3;
+  int baseSpd = 86, correctionSpd;
   int irLeft = 0, irRight = 0;
   
   low(26);                                   
@@ -82,7 +82,8 @@ int main() {
       // Measure difference in error values to turn more responsively at sharp turns.
       errorDiff = errorVal - prevErrorVal;     
       
-      prevErrorVal = errorVal;        
+      prevErrorVal = errorVal;
+      //print("%d\n", errorDiff);        
       
       // Reset distance measurement.
       irLeft = 0;
@@ -101,11 +102,11 @@ int main() {
 
         correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
         
-        if (correctionSpd > baseSpd/3) {
-          correctionSpd = baseSpd/3;
+        if (correctionSpd > 30) {
+          correctionSpd = 30;
         }
-        if (correctionSpd < -baseSpd/3) {
-          correctionSpd = -baseSpd/3;
+        if (correctionSpd < -30) {
+          correctionSpd = -30;
         }              
 
         totalErrorVal += errorVal;
