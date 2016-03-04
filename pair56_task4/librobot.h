@@ -14,7 +14,7 @@
 
 #define _WHEEL_BASE 105.8
 #define _TICK_LENGTH 3.25
-#define _WHEEL_RADIUS 30.0 // Need to change
+#define _WHEEL_RADIUS 33.0 // Need to change
 #define _ENCODER_CLICKS_PER_FULL_TURN 64
 
 int calculate_arc_length(int angle);
