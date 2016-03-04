@@ -74,3 +74,7 @@ double distance_travelled(double* positionCoordinates) {
   // Pythagora's theorem
   return sqrt(pow(*positionCoordinates, 2) + pow(*(positionCoordinates + 1), 2));
 }
+
+void log_write(FILE* fp, double* position_coords) {
+    fprintf(fp, "Position: (%f, %f). Angle: %f", position_coords[0], position_coords[1], position_coords[2]);
+}
