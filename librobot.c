@@ -42,10 +42,9 @@ void turn_pivot_function(int angle) {
 double* distance_wheels_travelled() {
   int* ticksArr = (int*)malloc(2 * sizeof(int));
   drive_getTicks(ticksArr, (ticksArr+1));
-  print("%d %d\n", *ticksArr, *(ticksArr+1));
   double* distanceWheelsTravelled = malloc(2 * sizeof(double));
-  *distanceWheelsTravelled = (*ticksArr * 1.0f /_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;
-  *(distanceWheelsTravelled+1) = (*(ticksArr+1)/_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;
+  *distanceWheelsTravelled = ((double)*ticksArr/_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;
+  *(distanceWheelsTravelled+1) = ((double)*(ticksArr+1)/_ENCODER_CLICKS_PER_FULL_TURN) * 2 * PI * _WHEEL_RADIUS;
   free(ticksArr);
   return distanceWheelsTravelled;
 }
@@ -54,8 +53,7 @@ double angle_change(double* distanceWheelsTravelled) {
   return (*distanceWheelsTravelled - *(distanceWheelsTravelled+1)) / _WHEEL_BASE;
 }
 
-double radius_middle(double* distanceWheelsTravelled) {
-  double angleChange = angle_change(distanceWheelsTravelled);
+double radius_middle(double* distanceWheelsTravelled, double angleChange) {
   double radiusLeft = *distanceWheelsTravelled/angleChange;
   double radiusRight = *(distanceWheelsTravelled+1)/angleChange;
   return (radiusLeft + radiusRight) / 2;
@@ -63,10 +61,16 @@ double radius_middle(double* distanceWheelsTravelled) {
 
 double* position_change(double* distanceWheelsTravelled, double currentAngle) {
   double* positionCoordinates = malloc(3 * sizeof(double));
-  double radiusMiddle = radius_middle(distanceWheelsTravelled);
   double angleChange = angle_change(distanceWheelsTravelled);
-  *positionCoordinates = radiusMiddle*cos(currentAngle) - radiusMiddle*cos(currentAngle+angleChange);
-  *(positionCoordinates + 1) = radiusMiddle*sin(currentAngle+angleChange) - radiusMiddle*sin(currentAngle);
+  if (angleChange == 0) {
+    *positionCoordinates = 0;
+    *(positionCoordinates + 1) = *distanceWheelsTravelled;
+  }
+  else {
+    double radiusMiddle = radius_middle(distanceWheelsTravelled, angleChange);
+    *positionCoordinates = radiusMiddle*cos(currentAngle) - radiusMiddle*cos(currentAngle+angleChange);
+    *(positionCoordinates + 1) = radiusMiddle*sin(currentAngle+angleChange) - radiusMiddle*sin(currentAngle);
+  }          
   *(positionCoordinates + 2) = angleChange; // angle in radian
   return positionCoordinates;
 }
@@ -77,5 +81,5 @@ double distance_travelled(double* positionCoordinates) {
 }
 
 void log_write(FILE* fp, double* position_coords) {
-    fprintf(fp, "Position: (%f, %f). Angle: %f", position_coords[0], position_coords[1], position_coords[2] * PI/180);
+    fprintf(fp, "Position: (%.2f, %.2f). Angle: %.2f\n", position_coords[0], position_coords[1], position_coords[2] * 180/PI);
 }

@@ -34,7 +34,7 @@ double* distance_wheels_travelled();
 
 double angle_change(double* distanceWheelsTravelled);
 
-double radius_middle(double* distanceWheelsTravelled);
+double radius_middle(double* distanceWheelsTravelled, double angleChange);
 
 double* position_change(double* distanceWheelsTravelled, double currentAngle);
 

@@ -1,6 +1,7 @@
 /*
   Created by Matthew Bell and Wayne Tsui.
   This programme sets a robot to curve along a left wall and stops when an obstacle is 5cm ahead of it.
+  The x-coordinates, y-coordinates, total distance travelled and angle change (relative to starting position) are displayed on Terminal.
 */
 
 #include "simpletools.h"
@@ -8,57 +9,6 @@
 #include "librobot.h"
 #include "ping.h"
 
-/*
-  Test IR Detectors for Distance.c
-*/
-/*
-#include "simpletools.h"
-
-int irLeft, irRight;
-
-int main()
-{
-  low(26);
-  low(27);
-
-  while(1)
-  {
-    irLeft = 0;                                     // <- add
-    irRight = 0;                                    // <- add
-
-    for(int dacVal = 0; dacVal < 160; dacVal += 8)  // <- add
-    {                                               // <- add
-      dac_ctr(26, 0, dacVal);                       // <- add
-      freqout(11, 1, 38000);                        // <- add
-      irLeft += input(10);                          // <- modify
-
-
-    }                                               // <- add
-
-    print("%c irLeft = %d%c",         // <- modify
-           HOME,   irLeft, CLREOL);        // <- modify
-    pause(100);
-  }
-}
-*/
-
-/*
-int distLeft[4], distRight[4];
-
-int main()
-{
-  drive_getTicks(&distLeft[0], &distRight[0]);
-
-  print("distLeft[0] = %d, distRight[0] = %d\n", distLeft[0], distRight[0]);
-
-  drive_speed(80, 60);
-  pause(2000);
-  drive_speed(0, 0);
-
-  drive_getTicks(&distLeft[1], &distRight[1]);
-
-  print("distLeft[1] = %d, distRight[1] = %d\n", distLeft[1], distRight[1]);
-}*/
 
 int main() {
   int distance, stoppingDist = 5;
@@ -163,18 +113,11 @@ int main() {
         print("Position X: %.2f Position Y: %.2f\n", *positionCoordinates, *(positionCoordinates+1));
         
         distanceTravelled = distance_travelled(positionCoordinates);
-        print("Distance travelled: %.2f mm. Angle from start point: %.2f degrees.\n", distanceTravelled, *(positionCoordinates+2) * PI/180);
+        print("Distance travelled: %.2f mm. Angle from start point: %.2f degrees.\n", distanceTravelled, *(positionCoordinates+2) * 180/PI);
         
         // Execute print values only once when robot stops.
         flag = 0;
         
-        // Test code for SD Card
-        /*
-        sd_mount(DO, CLK, DI, CS);
-        FILE* fp = fopen("task4_2.txt", "w");
-        log_write(fp, positionCoordinates);
-        fclose(fp);
-        */
       }
     }
   }

@@ -8,54 +8,18 @@
 #include "librobot.h"
 #include "ping.h"
 
-/*
-  Test IR Detectors for Distance.c
-*/
-/*
-#include "simpletools.h"
-
-int irLeft, irRight;
-
-int main()
-{
-  low(26);                                   
-  low(27);                                   
-
-  while(1)
-  {
-    irLeft = 0;                                     // <- add
-    irRight = 0;                                    // <- add
-
-    for(int dacVal = 0; dacVal < 160; dacVal += 8)  // <- add
-    {                                               // <- add
-      dac_ctr(26, 0, dacVal);                       // <- add
-      freqout(11, 1, 38000);                        // <- add
-      irLeft += input(10);                          // <- modify
-  
-      
-    }                                               // <- add
-
-    print("%c irLeft = %d%c",         // <- modify
-           HOME,   irLeft, CLREOL);        // <- modify
-    pause(100);
-  }
-}
-*/
 
 int main() {
   int distance, stoppingDist = 5;
-  int setPoint = 13;
+  int setPoint = 12;
   int errorVal, prevErrorVal, totalErrorVal = 0, errorDiff = 0;
   int kp = -8, ki = -3, kd = -3;
   int baseSpd = 86, correctionSpd;
   int irLeft = 0, irRight = 0;
-
-  sd_mount(DO, CLK, DI, CS);
-  FILE* log_file = fopen("robot_log.txt", "w");
   
-  low(26);                                   
+  low(26);
   low(27);
-  
+
   while(1) {
 
     // Check front distance.
@@ -76,23 +40,23 @@ int main() {
       }
 
       errorVal = setPoint - irLeft;
-      
+
       // If robot moves from too far left/right to too far right/left, without hitting optimal setPoint, reset totalErrorVal.
       if ((prevErrorVal > 0 && errorVal <= 0) || (prevErrorVal < 0 && errorVal >= 0)) {
          totalErrorVal = 0;
       }
-      
+
       // Measure difference in error values to turn more responsively at sharp turns.
-      errorDiff = errorVal - prevErrorVal;     
-      
+      errorDiff = errorVal - prevErrorVal;
+
       prevErrorVal = errorVal;
-      //print("%d\n", errorDiff);        
-      
+      //print("%d\n", errorDiff);
+
       // Reset distance measurement.
       irLeft = 0;
       irRight = 0;
       //print("%d\n", errorVal);
-      
+
 
       // Robot is 10cm away from left wall, optimal.
       if (errorVal == 0) {
@@ -101,16 +65,16 @@ int main() {
         drive_speed(baseSpd, baseSpd);
 
       }
-      else {        
+      else {
 
         correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
-        
+
         if (correctionSpd > 30) {
           correctionSpd = 30;
         }
         if (correctionSpd < -30) {
           correctionSpd = -30;
-        }              
+        }
 
         totalErrorVal += errorVal;
         //print("%d\n",totalErrorVal);
@@ -127,15 +91,11 @@ int main() {
           drive_speed(baseSpd, baseSpd+correctionSpd);
         }
       }
-      // CHANGE POSITION VARIABLE NAME
-      //log_write(log_file, position_coords);
     }
 
     // Obstacle within 5cm, cannot move forward, stop.
     else {
       drive_speed(0, 0);
-      break;
     }
   }
-  fclose(log_file);
 }
