@@ -22,6 +22,11 @@
 #define DI 24
 #define CS 25
 
+typedef struct node {
+    int val;
+    struct node * next;
+} node_correctionSpd;
+
 int calculate_arc_length(int angle);
 
 int calculate_pivot_length(int angle);
@@ -40,6 +45,8 @@ double* position_change(double* distanceWheelsTravelled, double currentAngle);
 
 double distance_travelled(double* positionCoordinates);
 
-void log_write(FILE* fp, double* position_coords);
+//void log_write(FILE* fp, double* position_coords);
 
-double *log_read(FILE* fp);
+//double *log_read(FILE* fp);
+
+void push(node_correctionSpd ** head, int val);

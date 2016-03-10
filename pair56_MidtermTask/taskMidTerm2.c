@@ -54,23 +54,7 @@ int main() {
   int baseSpd = 86, correctionSpd;
   int irLeft = 0, irRight = 0;
 
-  int cycleCount = 0;
-  double* distanceWheelsTravelled = (double*)malloc(2 * sizeof(double));
-  double* currentDistanceWheelsTravelled = (double*)malloc(2 * sizeof(double));
-  double* prevDistanceWheelsTravelled = (double*)malloc(2 * sizeof(double));
-  *prevDistanceWheelsTravelled = 0;
-  *(prevDistanceWheelsTravelled+1) = 0;
-
-  double* positionCoordinates = (double*)malloc(3 * sizeof(double));
-  double distanceTravelled = 0;
-  double angleChange = 0;
-
-  int* backtrack = (int*)malloc(400 * sizeof(int));
-  for (int j = 0; j < 400; j++) {
-    backtrack[j] = 0;
-  }
-  int i = 0;
-
+  node_correctionSpd* head = NULL;
 
   low(26);
   low(27);
@@ -121,6 +105,9 @@ int main() {
         // Move straight.
         drive_speed(baseSpd, baseSpd);
 
+        // Push value to linked list. 0 means no correction speed.
+        push(&head, 0);
+
       }
       else {
 
@@ -140,37 +127,20 @@ int main() {
         if (errorVal < 0) {
           // Move left, correctionSpd is positive.
           drive_speed(baseSpd-correctionSpd, baseSpd);
+
+          // Push value of correctionSpd to linked list.
+          push(&head, correctionSpd);
         }
 
         // Robot is too near to left wall.
         else if (errorVal > 0) {
           // Move right, correctionSpd is negative.
           drive_speed(baseSpd, baseSpd+correctionSpd);
+
+          // Push value of correctionSpd to linked list.
+          push(&head, correctionSpd);
         }
       }
-
-      // End of move cycle.
-      cycleCount++;
-      if (cycleCount % 5 == 0) {
-
-        // Get current distance, distance moved every 10 cycles.
-        distanceWheelsTravelled = distance_wheels_travelled();
-        *currentDistanceWheelsTravelled = *distanceWheelsTravelled - *prevDistanceWheelsTravelled;
-        *(currentDistanceWheelsTravelled+1) = *(distanceWheelsTravelled+1) - *(prevDistanceWheelsTravelled+1);
-        prevDistanceWheelsTravelled = distanceWheelsTravelled;
-
-        if (i < 399) {
-          *(backtrack + i) = (int)(*(currentDistanceWheelsTravelled+1)/_TICK_LENGTH + 0.5);
-          *(backtrack + i+1) = (int)(*(currentDistanceWheelsTravelled)/_TICK_LENGTH + 0.5);
-          i+=2;
-        }
-
-        //positionCoordinates = position_change(currentDistanceWheelsTravelled, 0);
-        //distanceTravelled = distance_travelled(positionCoordinates);
-        //angleChange = *(positionCoordinates + 2) * 180/PI;
-
-      }
-
     }
 
     // Obstacle within 5cm, cannot move forward, stop.
@@ -178,18 +148,23 @@ int main() {
       // End of course, turn around.
       drive_speed(0,0);
       turn_pivot_function(180);
-      for (int k = 400-1; k > 0; k-=1) {
-        if(backtrack[k] != 0) {
-          drive_goto(*(backtrack+(k-1)), *(backtrack+k));
-          k--;
+
+      node_correctionSpd* current = head;
+      while (current != NULL) {
+        if (current->val == 0) {
+          drive_speed(baseSpd, baseSpd);
         }
+        else if (current->val > 0) {
+          drive_speed(baseSpd, baseSpd-correctionSpd);
+        }
+        else {
+          drive_speed(baseSpd+correctionSpd, baseSpd);
+        }
+        current = current->next;
       }
+
+      drive_speed(0,0);
       break;
     }
   }
-  free(distanceWheelsTravelled);
-  free(currentDistanceWheelsTravelled);
-  free(prevDistanceWheelsTravelled);
-  free(positionCoordinates);
-  free(backtrack);
 }

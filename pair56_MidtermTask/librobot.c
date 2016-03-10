@@ -4,6 +4,8 @@
 
 #include "librobot.h"
 
+// ROBOT MOVEMENT FUNCTIONS
+
 int calculate_arc_length(int angle) {
     double arc_length = _WHEEL_BASE * (angle * PI / 180);
     return (arc_length / _TICK_LENGTH);
@@ -70,7 +72,7 @@ double* position_change(double* distanceWheelsTravelled, double currentAngle) {
     double radiusMiddle = radius_middle(distanceWheelsTravelled, angleChange);
     *positionCoordinates = radiusMiddle*cos(currentAngle) - radiusMiddle*cos(currentAngle+angleChange);
     *(positionCoordinates + 1) = radiusMiddle*sin(currentAngle+angleChange) - radiusMiddle*sin(currentAngle);
-  }          
+  }
   *(positionCoordinates + 2) = angleChange; // angle in radian
   return positionCoordinates;
 }
@@ -80,17 +82,32 @@ double distance_travelled(double* positionCoordinates) {
   return sqrt(pow(*positionCoordinates, 2) + pow(*(positionCoordinates + 1), 2));
 }
 
+// SD CARD FUNCTIONS
+/*
 void log_write(FILE* fp, double* position_coords) {
     // position_coords 0, 1, 2
     fprintf(fp, "%.2f %.2f %.2f\n", position_coords[0], position_coords[1], position_coords[2] * 180/PI);
 }
 
 double *log_read(FILE* fp) {
-  double *coords = (double*)malloc(sizeof(double * 3));
+  double *coords = (double*)malloc(3 * sizeof(double));
   if (fscanf(fp, "%d %d %d", coords, coords+1, coords+2)) {
     return coords;
   }
   else {
     return NULL;
   }
+}
+*/
+
+// LINKED LIST FUNCTIONS
+
+// Pushing to the list.
+void push(node_correctionSpd ** head, int val) {
+    node_correctionSpd * new_node;
+    new_node = malloc(sizeof(node_correctionSpd));
+
+    new_node->val = val;
+    new_node->next = *head;
+    *head = new_node;
 }
