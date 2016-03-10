@@ -53,6 +53,7 @@ int main() {
   int kp = -8, ki = -4, kd = -4;
   int baseSpd = 86, correctionSpd;
   int irLeft = 0, irRight = 0;
+  FILE *fp = fopen('log.txt', 'w');
 
   low(26);
   low(27);
@@ -134,8 +135,10 @@ int main() {
 
     // Obstacle within 5cm, cannot move forward, stop.
     else {
+      fclose(fp); // close the log.
       drive_speed(0, 0);
       turn_pivot_function(180);
+      fp = fopen("log.txt", 'r'); // open log for reading.
     }
   }
 }
