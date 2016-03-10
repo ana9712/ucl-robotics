@@ -81,5 +81,16 @@ double distance_travelled(double* positionCoordinates) {
 }
 
 void log_write(FILE* fp, double* position_coords) {
-    fprintf(fp, "Position: (%.2f, %.2f). Angle: %.2f\n", position_coords[0], position_coords[1], position_coords[2] * 180/PI);
+    // position_coords 0, 1, 2
+    fprintf(fp, "%.2f %.2f %.2f\n", position_coords[0], position_coords[1], position_coords[2] * 180/PI);
+}
+
+double *log_read(FILE* fp) {
+  double *coords = (double*)malloc(sizeof(double * 3));
+  if (fscanf(fp, "%d %d %d", coords, coords+1, coords+2)) {
+    return coords;
+  }
+  else {
+    return NULL;
+  }
 }

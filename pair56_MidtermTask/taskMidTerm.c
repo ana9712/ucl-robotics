@@ -14,8 +14,8 @@ int irLeft, irRight;
 
 int main()
 {
-  low(26);                                   
-  low(27);                                   
+  low(26);
+  low(27);
 
   while(1)
   {
@@ -27,7 +27,7 @@ int main()
       dac_ctr(26, 0, dacVal);                       // <- add
       freqout(11, 1, 38000);                        // <- add
       irLeft += input(10);                          // <- modify
-  
+
       dac_ctr(27, 1, dacVal);                       // <- add
       freqout(1, 1, 38000);
       irRight += input(2);                          // <- modify
@@ -53,25 +53,24 @@ int main() {
   int kp = -8, ki = -4, kd = -4;
   int baseSpd = 86, correctionSpd;
   int irLeft = 0, irRight = 0;
-  
+
   int cycleCount = 0;
   double* distanceWheelsTravelled = (double*)malloc(2 * sizeof(double));
   double* currentDistanceWheelsTravelled = (double*)malloc(2 * sizeof(double));
   double* prevDistanceWheelsTravelled = (double*)malloc(2 * sizeof(double));
   *prevDistanceWheelsTravelled = 0;
   *(prevDistanceWheelsTravelled+1) = 0;
-  
+
   double* positionCoordinates = (double*)malloc(3 * sizeof(double));
   double distanceTravelled = 0;
   double angleChange = 0;
-  
+
   int* backtrack = (int*)malloc(400 * sizeof(int));
   for (int j = 0; j < 400; j++) {
     backtrack[j] = 0;
-  }    
+  }
   int i = 0;
-  
-  
+
   low(26);
   low(27);
 
@@ -148,30 +147,27 @@ int main() {
           drive_speed(baseSpd, baseSpd+correctionSpd);
         }
       }
-      
+
       // End of move cycle.
       cycleCount++;
       if (cycleCount % 5 == 0) {
-        
+
         // Get current distance, distance moved every 10 cycles.
         distanceWheelsTravelled = distance_wheels_travelled();
         *currentDistanceWheelsTravelled = *distanceWheelsTravelled - *prevDistanceWheelsTravelled;
         *(currentDistanceWheelsTravelled+1) = *(distanceWheelsTravelled+1) - *(prevDistanceWheelsTravelled+1);
         prevDistanceWheelsTravelled = distanceWheelsTravelled;
-        
+
         if (i < 399) {
           *(backtrack + i) = (int)(*(currentDistanceWheelsTravelled+1)/_TICK_LENGTH + 0.5);
           *(backtrack + i+1) = (int)(*(currentDistanceWheelsTravelled)/_TICK_LENGTH + 0.5);
           i+=2;
         }
-                  
-        
+
         //positionCoordinates = position_change(currentDistanceWheelsTravelled, 0);
         //distanceTravelled = distance_travelled(positionCoordinates);
         //angleChange = *(positionCoordinates + 2) * 180/PI;
-
-      }        
-      
+      }
     }
 
     // Obstacle within 5cm, cannot move forward, stop.
@@ -183,8 +179,8 @@ int main() {
         if(backtrack[k] != 0) {
           drive_goto(*(backtrack+(k-1)), *(backtrack+k));
           k--;
-        }        
-      }        
+        }
+      }
       break;
     }
   }
