@@ -48,12 +48,30 @@ int main()
 
 
 int main() {
-  int distance, stoppingDist = 5;
+  int distance, stoppingDist = 8;
   int errorVal, prevErrorVal, totalErrorVal = 0, errorDiff = 0;
   int kp = -8, ki = -4, kd = -4;
   int baseSpd = 86, correctionSpd;
   int irLeft = 0, irRight = 0;
-
+  
+  int cycleCount = 0;
+  double* distanceWheelsTravelled = (double*)malloc(2 * sizeof(double));
+  double* currentDistanceWheelsTravelled = (double*)malloc(2 * sizeof(double));
+  double* prevDistanceWheelsTravelled = (double*)malloc(2 * sizeof(double));
+  *prevDistanceWheelsTravelled = 0;
+  *(prevDistanceWheelsTravelled+1) = 0;
+  
+  double* positionCoordinates = (double*)malloc(3 * sizeof(double));
+  double distanceTravelled = 0;
+  double angleChange = 0;
+  
+  int* backtrack = (int*)malloc(400 * sizeof(int));
+  for (int j = 0; j < 400; j++) {
+    backtrack[j] = 0;
+  }    
+  int i = 0;
+  
+  
   low(26);
   low(27);
 
@@ -108,11 +126,11 @@ int main() {
 
         correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
 
-        if (correctionSpd > 30) {
-          correctionSpd = 30;
+        if (correctionSpd > 40) {
+          correctionSpd = 40;
         }
-        if (correctionSpd < -30) {
-          correctionSpd = -30;
+        if (correctionSpd < -40) {
+          correctionSpd = -40;
         }
 
         totalErrorVal += errorVal;
@@ -130,12 +148,49 @@ int main() {
           drive_speed(baseSpd, baseSpd+correctionSpd);
         }
       }
+      
+      // End of move cycle.
+      cycleCount++;
+      if (cycleCount % 5 == 0) {
+        
+        // Get current distance, distance moved every 10 cycles.
+        distanceWheelsTravelled = distance_wheels_travelled();
+        *currentDistanceWheelsTravelled = *distanceWheelsTravelled - *prevDistanceWheelsTravelled;
+        *(currentDistanceWheelsTravelled+1) = *(distanceWheelsTravelled+1) - *(prevDistanceWheelsTravelled+1);
+        prevDistanceWheelsTravelled = distanceWheelsTravelled;
+        
+        if (i < 399) {
+          *(backtrack + i) = (int)(*(currentDistanceWheelsTravelled+1)/_TICK_LENGTH + 0.5);
+          *(backtrack + i+1) = (int)(*(currentDistanceWheelsTravelled)/_TICK_LENGTH + 0.5);
+          i+=2;
+        }
+                  
+        
+        //positionCoordinates = position_change(currentDistanceWheelsTravelled, 0);
+        //distanceTravelled = distance_travelled(positionCoordinates);
+        //angleChange = *(positionCoordinates + 2) * 180/PI;
+
+      }        
+      
     }
 
     // Obstacle within 5cm, cannot move forward, stop.
     else {
-      drive_speed(0, 0);
+      // End of course, turn around.
+      drive_speed(0,0);
       turn_pivot_function(180);
+      for (int k = 400-1; k > 0; k-=1) {
+        if(backtrack[k] != 0) {
+          drive_goto(*(backtrack+(k-1)), *(backtrack+k));
+          k--;
+        }        
+      }        
+      break;
     }
   }
+  free(distanceWheelsTravelled);
+  free(currentDistanceWheelsTravelled);
+  free(prevDistanceWheelsTravelled);
+  free(positionCoordinates);
+  free(backtrack);
 }
