@@ -41,3 +41,5 @@ double* position_change(double* distanceWheelsTravelled, double currentAngle);
 double distance_travelled(double* positionCoordinates);
 
 void log_write(FILE* fp, double* position_coords);
+
+double *log_read(FILE* fp);

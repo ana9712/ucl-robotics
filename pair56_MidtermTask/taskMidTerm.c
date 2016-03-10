@@ -54,6 +54,7 @@ int main() {
   int baseSpd = 86, correctionSpd;
   int irLeft = 0, irRight = 0;
   FILE *fp = fopen('log.txt', 'w');
+  int log_timer = 0;
 
   low(26);
   low(27);
@@ -131,6 +132,12 @@ int main() {
           drive_speed(baseSpd, baseSpd+correctionSpd);
         }
       }
+      
+      if (log_timer++ > 100) {
+        double *travelled = distance_wheels_travelled();
+        // write to log (need to double check this is correct.
+        log_write(fp, position_change(travelled, angle_change(travelled)));
+      }
     }
 
     // Obstacle within 5cm, cannot move forward, stop.
@@ -139,6 +146,12 @@ int main() {
       drive_speed(0, 0);
       turn_pivot_function(180);
       fp = fopen("log.txt", 'r'); // open log for reading.
+      double *coords = log_read(fp);
+      while (coords != NULL) {
+        // do something with the coords. Then:
+        coords = log_read(fp);
+      }
+      exit(0); // We are done.
     }
   }
 }
