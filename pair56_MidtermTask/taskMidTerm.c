@@ -48,9 +48,9 @@ int main()
 
 
 int main() {
-  int distance, stoppingDist = 8;
+  int distance, stoppingDist = 10;
   int errorVal, prevErrorVal, totalErrorVal = 0, errorDiff = 0;
-  int kp = -8, ki = -4, kd = -4;
+  int kp = -8, ki = -2  , kd = -4;
   int baseSpd = 86, correctionSpd;
   int irLeft = 0, irRight = 0;
 
