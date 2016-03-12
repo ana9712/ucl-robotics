@@ -50,10 +50,9 @@ int main()
 int main() {
   int distance, stoppingDist = 8;
   int errorVal, prevErrorVal, totalErrorVal = 0, errorDiff = 0;
-  int kp = -4, ki = -2, kd = -2;
-  int baseSpd = 86, correctionSpd;
+  int kp = -6, ki = -3, kd = -3;
+  int baseSpd = 128, correctionSpd;
   int irLeft = 0, irRight = 0;
-  //int y = 0, z = 0;
 
   node_correctionSpd* head = NULL;
 
@@ -101,48 +100,45 @@ int main() {
 
 
       // Robot is 10cm away from left wall, optimal.
-      if (abs(errorVal) <= 1) {
+      if (errorVal == 0) {
 
         // Move straight.
         drive_speed(baseSpd, baseSpd);
 
         // Push value to linked list. 0 means no correction speed.
         push(&head, 0);
-        //y++;
 
       }
       else {
 
         correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
 
-        if (correctionSpd > 40) {
-          correctionSpd = 40;
+        if (correctionSpd > 50) {
+          correctionSpd = 50;
         }
-        if (correctionSpd < -40) {
-          correctionSpd = -40;
+        if (correctionSpd < -50) {
+          correctionSpd = -50;
         }
 
         totalErrorVal += errorVal;
         //print("%d\n",totalErrorVal);
 
         // Robot is too near to right wall.
-        if (errorVal < 1) {
+        if (errorVal < 0) {
           // Move left, correctionSpd is positive.
           drive_speed(baseSpd-correctionSpd, baseSpd);
 
           // Push value of correctionSpd to linked list.
           push(&head, correctionSpd);
-          //y++;
         }
 
         // Robot is too near to left wall.
-        else if (errorVal > 1) {
+        else if (errorVal > 0) {
           // Move right, correctionSpd is negative.
           drive_speed(baseSpd, baseSpd+correctionSpd);
 
           // Push value of correctionSpd to linked list.
           push(&head, correctionSpd);
-          //y++;
         }
       }
     }
@@ -155,33 +151,26 @@ int main() {
       //print("Reached here");
       turn_pivot_function(180);
       drive_setRampStep(4);
-      //print("y is: %d\n", y);
-        
+
       node_correctionSpd* current = head;
       while (current != NULL) {
         int i = current->val;
         if (i == 0) {
           drive_speed(baseSpd, baseSpd);
-          //z++;
-          //print("Driving now - Left: %d, Right: %d. Value is correctionSpd: %d\n", baseSpd, baseSpd, i);
         }
         else if (i > 0) {
           drive_speed(baseSpd, baseSpd-i);
-          //z++;
-          //print("Driving now - Left: %d, Right: %d\n", baseSpd, baseSpd-i);
         }
         else {
           drive_speed(baseSpd+i, baseSpd);
-          //z++;
-          //print("Driving now - Left: %d, Right: %d\n", baseSpd+i, baseSpd);
         }
         pause(64);
         current = current->next;
       }
-      //print("z is: %d\n", z);
+      drive_setRampStep(1);
       drive_speed(0,0);
+      turn_pivot_function(180);
       break;
     }
   }
-  //print("Came back!");
 }

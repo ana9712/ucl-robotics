@@ -7,7 +7,7 @@
 // ROBOT MOVEMENT FUNCTIONS
 
 int calculate_arc_length(int angle) {
-    double arc_length = _WHEEL_BASE * (angle * PI / 180);
+    double arc_length = _WHEEL_BASE * angle * PI / 180;
     return (arc_length / _TICK_LENGTH);
 }
 
@@ -34,10 +34,11 @@ void turn_function(int angle) {
 void turn_pivot_function(int angle) {
     int left_wheel = 0, right_wheel = 0;
 
-      left_wheel = calculate_pivot_length(angle);
-      right_wheel = -left_wheel;
+    left_wheel = calculate_pivot_length(angle);
+    right_wheel = -left_wheel;
 
     drive_goto(left_wheel, right_wheel);
+
     return;
 }
 
