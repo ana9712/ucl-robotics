@@ -6,7 +6,7 @@
 
 
 
-/*
+
 //Test IR Detectors for Distance.c
 #include "simpletools.h"
 
@@ -38,8 +38,8 @@ int main()
     pause(100);
   }
 }
-*/
 
+/*
 
 #include "simpletools.h"
 #include "abdrive.h"
@@ -185,3 +185,4 @@ int main() {
   }
   //print("Came back!");
 }
+*/

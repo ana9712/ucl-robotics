@@ -5,42 +5,6 @@
 */
 
 
-
-/*
-//Test IR Detectors for Distance.c
-#include "simpletools.h"
-
-int irLeft, irRight;
-
-int main()
-{
-  low(26);
-  low(27);
-
-  while(1)
-  {
-    irLeft = 0;                                     // <- add
-    irRight = 0;                                    // <- add
-
-    for(int dacVal = 0; dacVal < 160; dacVal += 8)  // <- add
-    {                                               // <- add
-      dac_ctr(26, 0, dacVal);                       // <- add
-      freqout(11, 1, 38000);                        // <- add
-      irLeft += input(10);                          // <- modify
-
-      dac_ctr(27, 1, dacVal);                       // <- add
-      freqout(1, 1, 38000);
-      irRight += input(2);                          // <- modify
-    }                                               // <- add
-
-    print("%c irLeft = %d, irRight = %d%c",         // <- modify
-           HOME,   irLeft, irRight, CLREOL);        // <- modify
-    pause(100);
-  }
-}
-*/
-
-
 #include "simpletools.h"
 #include "abdrive.h"
 #include "librobot.h"
@@ -50,10 +14,10 @@ int main()
 int main() {
   int distance, stoppingDist = 8;
   int errorVal, prevErrorVal, totalErrorVal = 0, errorDiff = 0;
-  int kp = -6, ki = -3, kd = -3;
+  int kp = -4, ki = -2, kd = -2;
   int baseSpd = 128, correctionSpd;
   int irLeft = 0, irRight = 0;
-
+  
   node_correctionSpd* head = NULL;
 
   low(26);
@@ -80,7 +44,6 @@ int main() {
       }
 
       errorVal = irRight - irLeft;
-      //print("%d\n",errorVal);
 
       // If robot moves from too far left/right to too far right/left, without hitting optimal setPoint, reset totalErrorVal.
       if ((prevErrorVal > 0 && errorVal <= 0) || (prevErrorVal < 0 && errorVal >= 0)) {
@@ -91,15 +54,12 @@ int main() {
       errorDiff = errorVal - prevErrorVal;
 
       prevErrorVal = errorVal;
-      //print("%d\n", errorDiff);
 
       // Reset distance measurement.
       irLeft = 0;
       irRight = 0;
-      //print("%d\n", errorVal);
 
-
-      // Robot is 10cm away from left wall, optimal.
+      // Robot is equidistant from both left and right side walls.
       if (errorVal == 0) {
 
         // Move straight.
@@ -121,7 +81,6 @@ int main() {
         }
 
         totalErrorVal += errorVal;
-        //print("%d\n",totalErrorVal);
 
         // Robot is too near to right wall.
         if (errorVal < 0) {
@@ -144,11 +103,11 @@ int main() {
     }
 
     // Obstacle within 5cm, cannot move forward, stop.
+    // Execute return path movements WITHOUT sensors.
     else {
       // End of course, turn around.
       drive_setRampStep(1);
       drive_speed(0,0);
-      //print("Reached here");
       turn_pivot_function(180);
       drive_setRampStep(4);
 
