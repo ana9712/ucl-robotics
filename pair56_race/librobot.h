@@ -17,15 +17,15 @@
 #define _WHEEL_RADIUS 33.0 // Need to change
 #define _ENCODER_CLICKS_PER_FULL_TURN 64
 
-#define DO 22
-#define CLK 23
-#define DI 24
-#define CS 25
+// #define DO 22
+// #define CLK 23
+// #define DI 24
+// #define CS 25
 
-typedef struct node {
-    int val;
-    struct node * next;
-} node_correctionSpd;
+// typedef struct node {
+//     int val;
+//     struct node * next;
+// } node_correctionSpd;
 
 int calculate_arc_length(int angle);
 
@@ -35,18 +35,18 @@ void turn_function(int angle);
 
 void turn_pivot_function(int angle);
 
-double* distance_wheels_travelled();
+// double* distance_wheels_travelled();
 
-double angle_change(double* distanceWheelsTravelled);
+// double angle_change(double* distanceWheelsTravelled);
 
-double radius_middle(double* distanceWheelsTravelled, double angleChange);
+// double radius_middle(double* distanceWheelsTravelled, double angleChange);
 
-double* position_change(double* distanceWheelsTravelled, double currentAngle);
+// double* position_change(double* distanceWheelsTravelled, double currentAngle);
 
-double distance_travelled(double* positionCoordinates);
+// double distance_travelled(double* positionCoordinates);
 
 //void log_write(FILE* fp, double* position_coords);
 
 //double *log_read(FILE* fp);
 
-void push(node_correctionSpd ** head, int val);
+// void push(node_correctionSpd ** head, int val);
