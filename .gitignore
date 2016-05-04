@@ -2,3 +2,6 @@
 cmm/
 **/Makefile
 **/map.txt
+**/CMakeFiles
+champions3
+*.cmake
