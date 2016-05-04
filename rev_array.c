@@ -8,24 +8,12 @@
 // else returns -1.
 // *implements interpolation search for fast searching.
 int int_in_arr(int x, int *a, int l) {
-  if (l == -1)
-    return -1;
-  int lo = 0;
-  int hi = l - 1;
-  int mid;
-
-  while (a[hi] != a[lo] && x >= a[lo] && x <= a[hi]) {
-    mid = lo + ((x - a[lo]) * (hi - lo) / ( a[hi] - a[lo] ));
-    if (a[mid] < x)
-      lo = mid + 1;
-    else if (x < a[mid])
-      hi = mid - 1;
-    else
-      return mid;
+  int i = 0; 
+  while (i < l) {
+    if (a[i] == x)
+      return i;
+    i++;
   }
-
-  if (x == a[lo])
-    return lo;
   return -1;
 }
 
@@ -58,18 +46,23 @@ void rev_array(int *l, int *a) {
     a[j--] = tmp;
   }
 
-  // now, remove duplicates. Add first occurence of
+  // now, remove duplicate paths. Add first occurence of
   // each number to the array and then search each time.
-  int search_arr[*l]; int arr_ptr = -1; i = 0;
-  while (i < *l) {
-    if (int_in_arr(a[i], search_arr, arr_ptr + 1)) {
-      // add to the search array.
-      search_arr[++arr_ptr] = a[i];
-      i++;
+  int search_arr[*l]; int arr_ptr = -1; i = (*l)-1;
+  while (i >= 0) {
+    if (int_in_arr(a[i], search_arr, arr_ptr+1) >= 0) {
+      // you dun messed up. remove path.
+      // remove up to other occurence of a[i].
+      int j = i+1; int x;
+      do {
+        x = a[j];
+        el_del(a, j, *l);
+        (*l)--;
+      } while (x != a[i]);
+      i--;
     }
     else {
-      // delete this element.
-      el_del(a, i, (*l)--);
+      search_arr[++arr_ptr] = a[i--];
     }
   }
 }
