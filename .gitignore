@@ -5,3 +5,5 @@ cmm/
 **/CMakeFiles
 champions3
 *.cmake
+*.o
+*.fuse_hidden*
