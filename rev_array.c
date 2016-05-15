@@ -8,7 +8,7 @@
 // else returns -1.
 // *implements interpolation search for fast searching.
 int int_in_arr(int x, int *a, int l) {
-  int i = 0; 
+  int i = 0;
   while (i < l) {
     if (a[i] == x)
       return i;
@@ -74,7 +74,7 @@ int main(int argc, char **argv) {
     // yeah I use atoi.
     arr[i] = atoi(argv[i+1]);
   }
-  
+
   int length = argc;
 
   rev_array(&length, arr);

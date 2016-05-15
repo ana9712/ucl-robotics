@@ -1,4 +1,4 @@
-/*
+ /*
   Created by Matthew Bell and Wayne Tsui.
 */
 
@@ -112,3 +112,115 @@ double *log_read(FILE* fp) {
 //     new_node->next = *head;
 //     *head = new_node;
 // }
+
+// RACE FUNCTIONS
+
+// x search value
+// a array
+// l length
+// RETURNS index of first occurence in array,
+// else returns -1.
+// *implements interpolation search for fast searching.
+int int_in_arr(int x, int *a, int l) {
+  int i = 0;
+  while (i < l) {
+    if (a[i] == x)
+      return i;
+    i++;
+  }
+  return -1;
+}
+
+// Deletes this element from array.
+// a     - array
+// index - index of element to delete
+// l     - length of array
+void el_del(int *a, int index, int l) {
+  for (int i = index; i < l-1; i++) {
+    a[i] = a[i+1];
+  }
+}
+
+// l length
+// a array
+void rev_array(int *l, int *a) {
+  // Why is length a pointer? Well, we're going to
+  // use side effects to modify it so that we can
+  // return the new length as well as the array.
+  //
+  // The variables passed to this function *will*
+  // be modified.
+
+  // swapping elements from the outside going
+  // inwards.
+  int i = 0; int j = *l - 1;
+  while (i < j) {
+    int tmp = a[i];
+    a[i++] = a[j];
+    a[j--] = tmp;
+  }
+}
+
+void shortest_path(int *l, int *a) {
+  // now, remove duplicate paths. Add first occurence of
+  // each number to the array and then search each time.
+  int search_arr[*l]; int arr_ptr = -1; int i = (*l)-1;
+  while (i >= 0) {
+    if (int_in_arr(a[i], search_arr, arr_ptr+1) >= 0) {
+      // you dun messed up. remove path.
+      // remove up to other occurence of a[i].
+      int j = i+1; int x;
+      do {
+        x = a[j];
+        el_del(a, j, *l);
+        (*l)--;
+      } while (x != a[i]);
+      i--;
+    }
+    else {
+      search_arr[++arr_ptr] = a[i--];
+    }
+  }
+}
+
+void parallel_align_left(int pingDist, int counter) {
+  // Tries to adjust robot to be parallel to the left side of the wall, calls before each box movement.
+  int newPingDist = 0;
+  // Adjust towards the left. Value of -8 is equivalent to drive goto -2, 2.
+  turn_pivot_function(-_PARALLEL_ALIGN_ANGLE);
+  // Check new ping distance.
+  pause(300);
+  newPingDist = ping_cm(8);
+  if ((pingDist - newPingDist) > 0) {
+    // Continue aligning towards the left.
+    counter++;
+    return parallel_align_left(newPingDist, counter);
+  }
+  else {
+    // Turn back, not a good position.
+    turn_pivot_function(_PARALLEL_ALIGN_ANGLE);
+    // Try adjusting towards the right if left side is not applicable.
+    if (counter == 0) {
+      return parallel_align_right(pingDist);
+    }
+  }
+  return;
+}
+
+void parallel_align_right(int pingDist) {
+  // Tries to adjust robot to be parallel to the left side of the wall, calls before each box movement.
+  int newPingDist = 0;
+  // Adjust towards the right.
+  turn_pivot_function(_PARALLEL_ALIGN_ANGLE);
+  // Check new ping distance.
+  pause(300);
+  newPingDist = ping_cm(8);
+  if ((pingDist - newPingDist) > 0) {
+    return parallel_align_right(newPingDist);
+  }
+  else {
+    // Turn back, not a good position.
+    turn_pivot_function(-_PARALLEL_ALIGN_ANGLE);
+  }
+  return;
+}

@@ -1,4 +1,4 @@
-/**
+ /**
  * LIBROBOT
  *
  * A library for automation
@@ -8,6 +8,7 @@
 
 #include "simpletools.h"
 #include "abdrive.h"
+#include "ping.h"
 #include <stdlib.h>
 #include <math.h>
 #include <stdint.h>
@@ -16,6 +17,7 @@
 #define _TICK_LENGTH 3.25
 #define _WHEEL_RADIUS 33.0 // Need to change
 #define _ENCODER_CLICKS_PER_FULL_TURN 64
+#define _PARALLEL_ALIGN_ANGLE (int)15
 
 // #define DO 22
 // #define CLK 23
@@ -50,3 +52,15 @@ void turn_pivot_function(int angle);
 //double *log_read(FILE* fp);
 
 // void push(node_correctionSpd ** head, int val);
+
+int int_in_arr(int x, int *a, int l);
+
+void el_del(int *a, int index, int l);
+
+void rev_array(int *l, int *a);
+
+void shortest_path(int *l, int *a);
+
+void parallel_align_left(int pingDist, int counter);
+
+void parallel_align_right(int pingDist);

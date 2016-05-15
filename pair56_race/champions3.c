@@ -5,8 +5,8 @@
 
 #include "simpletools.h"
 #include "abdrive.h"
-#include "librobot.h"
 #include "ping.h"
+#include "librobot.h"
 
 /*
 //Test IR Detectors for Distance.c
@@ -42,7 +42,7 @@ int main()
 }*/
 
 #define _MOVE_UNIT (int)(410/3.25)
-#define _FRONT_DIST (int)40
+#define _FRONT_DIST (int)35
 #define _MID_SPOT (int)17
 
 int main() {
@@ -54,15 +54,16 @@ int main() {
   int midPoint = 0;
   int ticksCounter = (int)_MOVE_UNIT;
   int errorVal, prevErrorVal, totalErrorVal = 0, errorDiff = 0;
-  int kp = -4, ki = -2, kd = -2;
-  int baseSpd = 80, correctionSpd;
+  int kp = -3, ki = -2, kd = -1;
+  int baseSpd = 80, raceSpd = 128, correctionSpd;
   int ticks[2];
   ticks[0] = 0, ticks[1] = 0;
   // Store left, middle and right ping distance (for adjustment in grid before moving)
   int LMR[3];
   LMR[0] = 0, LMR[1] = 0, LMR[2] = 0;
   int rePos = 0;
-  int flag = 0;
+  int backAtStartPoint = 0;
+  int parallelCounter = 0;
 
   low(26);
   low(27);
@@ -71,7 +72,7 @@ int main() {
     pathSeq[i] = 0;
   }
 
-  while(flag == 0) {
+  while(!backAtStartPoint) {
 
     // Store array boxNum (box number the robot is in)
     pathSeq[index] = boxNum;
@@ -154,6 +155,13 @@ int main() {
       }
     }
     else {
+
+      // TEST CODE FOR PARALLEL ALIGN (ONLY APPLIES TO LEFT WALL, AS ONCE ROBOT IS PARALLEL TO LEFT WALL IT WILL BE STRAIGHT FOR ALL DIRECTIONS)
+      parallel_align_left(LMR[0], parallelCounter);
+      parallelCounter = 0;
+      pause(300);
+      LMR[0] = ping_cm(8);
+
       // Readjust position based on left ping distance.
       rePos = (LMR[0] - _MID_SPOT) * 10 / 3.25;
       drive_goto(rePos, rePos);
@@ -384,6 +392,13 @@ int main() {
 
       // Final box, reposition for Phase 2.
       turn_pivot_function(-90);
+
+      // TEST CODE FOR PARALLEL ALIGN (ONLY APPLIES TO LEFT WALL, AS ONCE ROBOT IS PARALLEL TO LEFT WALL IT WILL BE STRAIGHT FOR ALL DIRECTIONS)
+      pause(300);
+      LMR[0] = ping_cm(8);
+      parallel_align_left(LMR[0], parallelCounter);
+      parallelCounter = 0;
+
       //Check for distance (left).
       pause(300);
       frontDist = ping_cm(8);
@@ -414,120 +429,92 @@ int main() {
       ticksCounter += rePos;
 
       turn_pivot_function(90);
-      flag = 1;
+      backAtStartPoint = 1;
     }
   }
 
-  // Display the path the robot took, from box to box.
-  // If this is correct, Phase 1 is done.
-  int arrLen = index;
-  // print("Sequence robot moved: ");
-  // for (int i=0; i<arrLen; i++) {
-  //   print("%d ", pathSeq[i]);
-  // }
-  // print("\n");
-  // print("Phase 1 completed, check if path sequence is correct\n");
-
-
   // Storing the path to and path back as two arrays.
-  for (int i=0; i<arrLen; i++) {
+  int arrLen = index;
+  for (int i = 0; i < arrLen; i++) {
     if (pathSeq[i] == 16) {
       midPoint = i;
     }
   }
 
-  int* pathTo = (int*)malloc(sizeof(int) * (midPoint+1));
-  int* pathBack = (int*)malloc(sizeof(int) * (arrLen-midPoint));
+  int pathToLength = midPoint + 1;
+  int pathBackLength = arrLen-midPoint;
 
-  print("Path to: ");
-  for (int i=0; i<midPoint+1; i++) {
+  int* pathTo = (int*)malloc(sizeof(int) * pathToLength);
+  int* pathBack = (int*)malloc(sizeof(int) * pathBackLength);
+
+  // print("Path to: ");
+  for (int i = 0; i < pathToLength; i++) {
     pathTo[i] = pathSeq[i];
-    print("%d ", pathTo[i]);
+  //  print("%d ", pathTo[i]);
   }
-  print("\n");
+  // print("\n");
 
-  print("Path back: ");
-  for (int i=midPoint; i<arrLen; i++) {
+  // print("Path back: ");
+  for (int i = midPoint; i < arrLen; i++) {
     pathBack[i-midPoint] = pathSeq[i];
-    print("%d ", pathBack[i-midPoint]);
+  //  print("%d ", pathBack[i-midPoint]);
   }
-  print("\n");
+  // print("\n");
 
-  // *****Have to remove duplicate path*****
+  // Finding shortest path.
+  shortest_path(&pathToLength, pathTo);
+  rev_array(&pathBackLength, pathBack);
+  shortest_path(&pathBackLength, pathBack);
 
-  // // Identifying duplicate index for path to.
-  // int duplicateIndexTo[10];
-  // int duplicateCounterTo = 0;
-  // for (int i = 0; i < 10; i++) {
-  //   duplicateIndexTo[i] = 0;
-  // }
-  // for (int i = 0; i <= midPoint; i++) {
-  //   for (int j = i+1; j <= midPoint; j++) {
-  //     if (pathTo[i] == pathTo[j]) {
-  //       duplicateIndexTo[duplicateCounterTo] = j;
-  //       duplicateIndexTo[duplicateCounterTo+1] = i;
-  //       duplicateCounterTo = duplicateCounterTo + 2;
-  //     }
-  //   }
-  // }
-  // print("Duplicate To: ");
-  // for (int i = 0; i < 10; i++) {
-  //   print("%d ", duplicateIndexTo[i]);
+  // Indicate ready to start Phase 2.
+  for (int i = 0; i < 3; i++) {
+    high(26);
+    pause(500);
+    low(26);
+    pause(500);
+  }
+
+  // Printing values of shortened pathTo and pathBack.
+  // for (int i = 0; i<pathToLength; i++) {
+  //   print("%d ", pathTo[i]);
   // }
   // print("\n");
   //
-  // // Identifying duplicate index for path back.
-  // int duplicateIndexBack[10];
-  // int duplicateCounterBack = 0;
-  // for (int i = 0; i < 10; i++) {
-  //   duplicateIndexBack[i] = 0;
-  // }
-  // for (int i = 0; i < (arrLen-midPoint-1); i++) {
-  //   for (int j = i+1; j < (arrLen-midPoint); j++) {
-  //     if (pathTo[i] == pathTo[j]) {
-  //       duplicateIndexBack[duplicateCounterBack] = j;
-  //       duplicateIndexBack[duplicateCounterBack+1] = i;
-  //       duplicateCounterBack = duplicateCounterBack + 2;
-  //     }
-  //   }
-  // }
-  // print("Duplicate Back: ");
-  // for (int i = 0; i < 10; i++) {
-  //   print("%d ", duplicateIndexBack[i]);
+  // for (int i=0; i<pathBackLength; i++) {
+  //   print("%d ", pathBack[i]);
   // }
   // print("\n");
 
-
-
-  // Indicate ready to start Phase 2.
-  high(26);
-  pause(500);
-  low(26);
-  pause(500);
-  high(26);
-  pause(500);
-  low(26);
-  pause(500);
-  high(26);
-  pause(500);
-  low(26);
-  pause(500);
-
-  for (int i = 0; i<=midPoint; i++) {
-    print("%d ", pathTo[i]);
+  // Choosing pathTo or pathBack as pathRace.
+  int pathRaceLength = 0;
+  if (pathToLength <= pathBackLength) {
+    pathRaceLength = pathToLength;
   }
-  print("\n");
-
-  for (int i=midPoint; i<arrLen; i++) {
-    print("%d ", pathBack[i-midPoint]);
+  else {
+    pathRaceLength = pathBackLength;
   }
-  print("\n");
+
+  int* pathRace = (int*)malloc(sizeof(int) * pathRaceLength);
+
+  if (pathToLength <= pathBackLength) {
+    for (int i = 0; i < pathRaceLength; i++) {
+      pathRace[i] = pathTo[i];
+    }
+  }
+  else {
+    for (int i = 0; i < pathRaceLength; i++) {
+      pathRace[i] = pathBack[i];
+    }
+  }
 
   int boxNumDiff = 0;
+  kp = -6;
+  ki = -4;
+  kd = -2;
 
   // Execute Phase 2
-  for (int i=0; i<midPoint; i++) {
-    boxNumDiff = pathTo[i+1] - pathTo[i];
+  for (int i = 0; i < pathRaceLength-1; i++) {
+    boxNumDiff = pathRace[i+1] - pathRace[i];
     if (boxNumDiff == 4) {
       // Move one box.
       while(((ticks[0]+ticks[1])/2) < ticksCounter) {
@@ -557,18 +544,18 @@ int main() {
         correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
 
         if (errorVal == 0) {
-          drive_speed(baseSpd, baseSpd);
+          drive_speed(raceSpd, raceSpd);
         }
 
         // Robot is too near to right wall.
         else if (errorVal < 0) {
           // Move left, correctionSpd is positive.
-          drive_speed(baseSpd-correctionSpd, baseSpd);
+          drive_speed(raceSpd-correctionSpd, raceSpd);
         }
         // Robot is too near to left wall.
         else if (errorVal > 0) {
           // Move right, correctionSpd is negative.
-          drive_speed(baseSpd, baseSpd+correctionSpd);
+          drive_speed(raceSpd, raceSpd+correctionSpd);
         }
         drive_getTicks(&ticks[0], &ticks[1]);
       }
@@ -605,18 +592,18 @@ int main() {
         correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
 
         if (errorVal == 0) {
-          drive_speed(baseSpd, baseSpd);
+          drive_speed(raceSpd, raceSpd);
         }
 
         // Robot is too near to right wall.
         else if (errorVal < 0) {
           // Move left, correctionSpd is positive.
-          drive_speed(baseSpd-correctionSpd, baseSpd);
+          drive_speed(raceSpd-correctionSpd, raceSpd);
         }
         // Robot is too near to left wall.
         else if (errorVal > 0) {
           // Move right, correctionSpd is negative.
-          drive_speed(baseSpd, baseSpd+correctionSpd);
+          drive_speed(raceSpd, raceSpd+correctionSpd);
         }
         drive_getTicks(&ticks[0], &ticks[1]);
       }
@@ -654,18 +641,18 @@ int main() {
         correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
 
         if (errorVal == 0) {
-          drive_speed(baseSpd, baseSpd);
+          drive_speed(raceSpd, raceSpd);
         }
 
         // Robot is too near to right wall.
         else if (errorVal < 0) {
           // Move left, correctionSpd is positive.
-          drive_speed(baseSpd-correctionSpd, baseSpd);
+          drive_speed(raceSpd-correctionSpd, raceSpd);
         }
         // Robot is too near to left wall.
         else if (errorVal > 0) {
           // Move right, correctionSpd is negative.
-          drive_speed(baseSpd, baseSpd+correctionSpd);
+          drive_speed(raceSpd, raceSpd+correctionSpd);
         }
         drive_getTicks(&ticks[0], &ticks[1]);
       }
@@ -703,18 +690,18 @@ int main() {
         correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
 
         if (errorVal == 0) {
-          drive_speed(baseSpd, baseSpd);
+          drive_speed(raceSpd, raceSpd);
         }
 
         // Robot is too near to right wall.
         else if (errorVal < 0) {
           // Move left, correctionSpd is positive.
-          drive_speed(baseSpd-correctionSpd, baseSpd);
+          drive_speed(raceSpd-correctionSpd, raceSpd);
         }
         // Robot is too near to left wall.
         else if (errorVal > 0) {
           // Move right, correctionSpd is negative.
-          drive_speed(baseSpd, baseSpd+correctionSpd);
+          drive_speed(raceSpd, raceSpd+correctionSpd);
         }
         drive_getTicks(&ticks[0], &ticks[1]);
       }
@@ -726,6 +713,7 @@ int main() {
 
   free(pathTo);
   free(pathBack);
+  free(pathRace);
   // print("Phase 2 completed.\n");
   return 0;
 }
