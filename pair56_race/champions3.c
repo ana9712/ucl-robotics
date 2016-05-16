@@ -41,11 +41,6 @@ int main()
   }
 }*/
 
-#define _MOVE_UNIT (int)(410/3.25)
-#define _FRONT_DIST (int)35
-#define _MID_SPOT (int)17
-#define _CURVE_UNIT (int)101
-
 int main() {
   int irLeft = 0, irRight = 0;
   int frontDist = 0;
@@ -55,7 +50,8 @@ int main() {
   int midPoint = 0;
   int ticksCounter = (int)_MOVE_UNIT;
   int errorVal, prevErrorVal, totalErrorVal = 0, errorDiff = 0;
-  int kp = -3, ki = -2, kd = -1;
+  int kp = 0, ki = 0, kd = 0;
+  // int kp = -3; ki = -2; kd = -1;
   int baseSpd = 80, raceSpd = 128, correctionSpd;
   int ticks[2];
   ticks[0] = 0, ticks[1] = 0;

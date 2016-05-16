@@ -226,10 +226,19 @@ void parallel_align_right(int pingDist) {
 }
 
 void move_shortLeftCurve() {
-  drive_speed(128,128);
-  pause(150);
-  drive_speed(67,128);
-  pause(840);
+  int left_dist = (_MOVE_UNIT - _WHEEL_BASE) * PI / 4;
+  int right_dist = (_MOVE_UNIT - _WHEEL_BASE) * PI / 4;
+  float ratio = left_dist / right_dist;
+  print("RATIO: %f\n", ratio);
+  drive_speed((int)( 128 * ratio ),128);
+  int tick_acc[2] = {0, 0};
+  while (( tick_acc[0] < left_dist ) && ( tick_acc[1] < right_dist)) {
+    pause(100);
+    int tmp[2] = {0, 0};
+    drive_getTicks(tmp, (tmp+1));
+    *tick_acc += *tmp;
+    *(tick_acc+1) += *(tmp+1);
+  }
   drive_speed(128,128);
 }
 

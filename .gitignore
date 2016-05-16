@@ -1,6 +1,6 @@
 .DS_Store
 cmm/
-**/Makefile
+Makefile
 **/map.txt
 **/CMakeFiles
 champions3
