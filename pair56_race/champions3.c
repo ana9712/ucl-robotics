@@ -635,8 +635,8 @@ int main() {
       if (isCurving) {
         // print("Curving-Right-Short\n");
         // Add required ticks to ticksCounter
-        ticksCounter += (int)_CURVE_UNIT;
-        move_shortRightCurve();
+        // ticksCounter += (int)_CURVE_UNIT;
+        ticksCounter +=move_shortRightCurve();
       }
       else {
         // print("Curving-Right-Long\n");
@@ -688,8 +688,8 @@ int main() {
         // drive_speed(0, 0);
         drive_speed(raceSpd,raceSpd);
         // Add required ticks to ticksCounter
-        ticksCounter += (int)_CURVE_UNIT;
-        move_shortRightCurve();
+        // ticksCounter += (int)_CURVE_UNIT;
+        ticksCounter += move_shortRightCurve();
         isCurving = 1;
       }
     }
@@ -700,8 +700,8 @@ int main() {
       if (isCurving) {
         // print("Curving-Left-Short\n");
         // Add required ticks to ticksCounter
-        ticksCounter += (int)_CURVE_UNIT;
-        move_shortLeftCurve();
+        // ticksCounter += (int)_CURVE_UNIT;
+        ticksCounter += move_shortLeftCurve();
       }
       else {
         // print("Curving-Left-Long\n");
@@ -753,8 +753,8 @@ int main() {
         // drive_speed(0, 0);
         drive_speed(raceSpd,raceSpd);
         // Add required ticks to ticksCounter
-        ticksCounter += (int)_CURVE_UNIT;
-        move_shortLeftCurve();
+        // ticksCounter += (int)_CURVE_UNIT;
+        ticksCounter += move_shortLeftCurve();
         isCurving = 1;
       }
     }

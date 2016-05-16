@@ -70,6 +70,6 @@ void parallel_align_left(int pingDist, int counter);
 
 void parallel_align_right(int pingDist);
 
-void move_shortLeftCurve();
+int move_shortLeftCurve();
 
-void move_shortRightCurve();
+int move_shortRightCurve();

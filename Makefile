@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /home/mbell/Documents/university/COMP105P/sim/Client
+CMAKE_SOURCE_DIR = /home/mbell/Documents/university/COMP105P/Client
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /home/mbell/Documents/university/COMP105P/sim/Client
+CMAKE_BINARY_DIR = /home/mbell/Documents/university/COMP105P/Client
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -80,14 +80,14 @@ rebuild_cache/fast: rebuild_cache
 
 # The main all target
 all: cmake_check_build_system
-	cd /home/mbell/Documents/university/COMP105P/sim/Client && $(CMAKE_COMMAND) -E cmake_progress_start /home/mbell/Documents/university/COMP105P/sim/Client/CMakeFiles /home/mbell/Documents/university/COMP105P/sim/Client/robot-controller/CMakeFiles/progress.marks
-	cd /home/mbell/Documents/university/COMP105P/sim/Client && $(MAKE) -f CMakeFiles/Makefile2 robot-controller/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /home/mbell/Documents/university/COMP105P/sim/Client/CMakeFiles 0
+	cd /home/mbell/Documents/university/COMP105P/Client && $(CMAKE_COMMAND) -E cmake_progress_start /home/mbell/Documents/university/COMP105P/Client/CMakeFiles /home/mbell/Documents/university/COMP105P/Client/robot-controller/CMakeFiles/progress.marks
+	cd /home/mbell/Documents/university/COMP105P/Client && $(MAKE) -f CMakeFiles/Makefile2 robot-controller/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/mbell/Documents/university/COMP105P/Client/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /home/mbell/Documents/university/COMP105P/sim/Client && $(MAKE) -f CMakeFiles/Makefile2 robot-controller/clean
+	cd /home/mbell/Documents/university/COMP105P/Client && $(MAKE) -f CMakeFiles/Makefile2 robot-controller/clean
 .PHONY : clean
 
 # The main clean target
@@ -97,17 +97,17 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /home/mbell/Documents/university/COMP105P/sim/Client && $(MAKE) -f CMakeFiles/Makefile2 robot-controller/preinstall
+	cd /home/mbell/Documents/university/COMP105P/Client && $(MAKE) -f CMakeFiles/Makefile2 robot-controller/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /home/mbell/Documents/university/COMP105P/sim/Client && $(MAKE) -f CMakeFiles/Makefile2 robot-controller/preinstall
+	cd /home/mbell/Documents/university/COMP105P/Client && $(MAKE) -f CMakeFiles/Makefile2 robot-controller/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /home/mbell/Documents/university/COMP105P/sim/Client && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/mbell/Documents/university/COMP105P/Client && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
 
 # Help Target
@@ -129,6 +129,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /home/mbell/Documents/university/COMP105P/sim/Client && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/mbell/Documents/university/COMP105P/Client && $(CMAKE_COMMAND) -H$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 
