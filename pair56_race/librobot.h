@@ -64,3 +64,7 @@ void shortest_path(int *l, int *a);
 void parallel_align_left(int pingDist, int counter);
 
 void parallel_align_right(int pingDist);
+
+void move_shortLeftCurve();
+
+void move_shortRightCurve();

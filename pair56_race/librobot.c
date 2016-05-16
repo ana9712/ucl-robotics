@@ -224,3 +224,19 @@ void parallel_align_right(int pingDist) {
   }
   return;
 }
+
+void move_shortLeftCurve() {
+  drive_speed(128,128);
+  pause(150);
+  drive_speed(67,128);
+  pause(840);
+  drive_speed(128,128);
+}
+
+void move_shortRightCurve() {
+  drive_speed(128,128);
+  pause(150);
+  drive_speed(128,67);
+  pause(840);
+  drive_speed(128,128);
+}
