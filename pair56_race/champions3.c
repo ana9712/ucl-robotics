@@ -596,6 +596,7 @@ int main() {
             // Move right, correctionSpd is negative.
             drive_speed(raceSpd, raceSpd+correctionSpd);
           }
+          pause(10);
           drive_getTicks(&ticks[0], &ticks[1]);
         }
         drive_speed(raceSpd,raceSpd);
@@ -647,6 +648,7 @@ int main() {
             // Move right, correctionSpd is negative.
             drive_speed(raceSpd, raceSpd+correctionSpd);
           }
+          pause(10);
           drive_getTicks(&ticks[0], &ticks[1]);
         }
         drive_speed(raceSpd,raceSpd);
@@ -706,6 +708,7 @@ int main() {
             // Move right, correctionSpd is negative.
             drive_speed(raceSpd, raceSpd+correctionSpd);
           }
+          pause(10);
           drive_getTicks(&ticks[0], &ticks[1]);
         }
         drive_speed(raceSpd,raceSpd);
@@ -768,6 +771,7 @@ int main() {
             // Move right, correctionSpd is negative.
             drive_speed(raceSpd, raceSpd+correctionSpd);
           }
+          pause(10);
           drive_getTicks(&ticks[0], &ticks[1]);
         }
         drive_speed(raceSpd,raceSpd);
