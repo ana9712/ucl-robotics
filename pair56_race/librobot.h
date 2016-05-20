@@ -19,10 +19,9 @@
 #define _ENCODER_CLICKS_PER_FULL_TURN 64
 #define _PARALLEL_ALIGN_ANGLE (int)15
 
-#define _MOVE_UNIT (int)(410/3.25)
+#define _MOVE_UNIT (int)(407/3.25)
 #define _FRONT_DIST (int)35
 #define _MID_SPOT (int)17
-#define _CURVE_UNIT (int)101
 
 // #define DO 22
 // #define CLK 23
@@ -73,3 +72,5 @@ void parallel_align_right(int pingDist);
 int move_shortLeftCurve();
 
 int move_shortRightCurve();
+
+int count_path_corners(int *pathRace, int pathRaceLength);

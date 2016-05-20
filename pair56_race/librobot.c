@@ -228,9 +228,7 @@ void parallel_align_right(int pingDist) {
 int move_shortLeftCurve() {
   int left_dist = (int)( ((float)_MOVE_UNIT - (_WHEEL_BASE/3.25)) * PI / 4 );
   int right_dist = (int)( ((float)_MOVE_UNIT + (_WHEEL_BASE/3.25)) * PI / 4 );
-  print("LEFT: %d, RIGHT: %d\n", left_dist, right_dist);
   float ratio = (float)left_dist / (float)right_dist;
-  print("RATIO: %f\n", ratio);
   drive_speed((int)( 128 * ratio ),128);
   int tick_acc[2];
   drive_getTicks(&tick_acc[0], &tick_acc[1]);
@@ -238,19 +236,15 @@ int move_shortLeftCurve() {
   while (( tmp[0] - tick_acc[0] < left_dist) && ( tmp[1] - tick_acc[1] < right_dist)) {
     pause(10);
     drive_getTicks(&tmp[0], &tmp[1]);
-    print("LEFT: %d, RIGHT: %d\n", tmp[0], tmp[1]);
   }
   drive_speed(128,128);
-  // return (int)(PI * _MOVE_UNIT / 4);
   return (tmp[0] + tmp[1] - tick_acc[0] - tick_acc[1]) / 2;
 }
 
 int move_shortRightCurve() {
   int right_dist = (int)( ((float)_MOVE_UNIT - (_WHEEL_BASE/3.25) - 5) * PI / 4 );
   int left_dist = (int)( ((float)_MOVE_UNIT + (_WHEEL_BASE/3.25) - 5) * PI / 4 );
-  print("LEFT: %d, RIGHT: %d\n", left_dist, right_dist);
   float ratio = (float)right_dist / (float)left_dist;
-  print("RATIO: %f\n", ratio);
   drive_speed(128, (int)( 128 * ratio ));
   int tick_acc[2];
   drive_getTicks(&tick_acc[0], &tick_acc[1]);
@@ -258,17 +252,17 @@ int move_shortRightCurve() {
   while (( tmp[0] - tick_acc[0] < left_dist) && ( tmp[1] - tick_acc[1] < right_dist)) {
     pause(10);
     drive_getTicks(&tmp[0], &tmp[1]);
-    print("LEFT: %d, RIGHT: %d\n", tmp[0], tmp[1]);
   }
   drive_speed(128,128);
-  // return (int)(PI * _MOVE_UNIT / 4);
   return (tmp[0] + tmp[1] - tick_acc[0] - tick_acc[1]) / 2;
 }
 
-//void move_shortRightCurve() {
-//  drive_speed(128,128);
-//  pause(150);
-//  drive_speed(128,67);
-//  pause(840);
-//  drive_speed(128,128);
-//}
+int count_path_corners(int *pathRace, int pathRaceLength) {
+  int numberOfCorners = 0;
+  for (int i = 1; i < pathRaceLength-1; i++) {
+    if ((pathRace[i] - pathRace[i-1]) != (pathRace[i+1] - pathRace[i])) {
+      numberOfCorners++;
+    }
+  }
+  return numberOfCorners;
+}

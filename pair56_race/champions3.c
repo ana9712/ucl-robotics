@@ -50,8 +50,7 @@ int main() {
   int midPoint = 0;
   int ticksCounter = (int)_MOVE_UNIT;
   int errorVal, prevErrorVal, totalErrorVal = 0, errorDiff = 0;
-  int kp = 0, ki = 0, kd = 0;
-  // int kp = -3; ki = -2; kd = -1;
+  int kp = -1, ki = -1, kd = -1;
   int baseSpd = 80, raceSpd = 128, correctionSpd;
   int ticks[2];
   ticks[0] = 0, ticks[1] = 0;
@@ -73,22 +72,16 @@ int main() {
 
     // Store array boxNum (box number the robot is in)
     pathSeq[index] = boxNum;
-    //print("In box: %d\n", boxNum);
+    // print("In box: %d\n", boxNum);
     index++;
-
-    //freqout(11, 1, 38000);
-    //irLeft = input(10);
-
-    //freqout(1, 1, 38000);
-    //irRight = input(2);
 
     // Update direction
     // Turn left.
     turn_pivot_function(-90);
-    //Check for obstacles (front, left, right)
+    // Check for obstacles (front, left, right)
     pause(300);
     frontDist = ping_cm(8);
-    //print("%d\n", frontDist);
+    // print("%d\n", frontDist);
     LMR[0] = frontDist;
     if (frontDist > _FRONT_DIST) {
       // Update new direction.
@@ -153,7 +146,7 @@ int main() {
     }
     else {
 
-      // TEST CODE FOR PARALLEL ALIGN (ONLY APPLIES TO LEFT WALL, AS ONCE ROBOT IS PARALLEL TO LEFT WALL IT WILL BE STRAIGHT FOR ALL DIRECTIONS)
+      // Parallel alignment (Only applies to left wall, as once robot is parallel to left wall it will be straight for all directions.)
       parallel_align_left(LMR[0], parallelCounter);
       parallelCounter = 0;
       pause(300);
@@ -165,10 +158,10 @@ int main() {
       ticksCounter += rePos;
 
       turn_pivot_function(90);
-      //Check for obstacles (front, left, right)
+      // Check for obstacles (front, left, right)
       pause(300);
       frontDist = ping_cm(8);
-      //print("%d\n", frontDist);
+      // print("%d\n", frontDist);
       LMR[1] = frontDist;
       if (frontDist > _FRONT_DIST) {
         // Move one box.
@@ -224,10 +217,10 @@ int main() {
 
         // Turn right.
         turn_pivot_function(90);
-        //Check for obstacles (front, left, right)
+        // Check for obstacles (front, left, right)
         pause(300);
         frontDist = ping_cm(8);
-        //print("%d\n", frontDist);
+        // print("%d\n", frontDist);
         LMR[2] = frontDist;
         if (frontDist > _FRONT_DIST) {
           // Update new direction.
@@ -297,10 +290,10 @@ int main() {
           ticksCounter += rePos;
 
           turn_pivot_function(90);
-          //Check for obstacles (front, left, right)
+          // Check for obstacles (front, left, right)
           pause(300);
           frontDist = ping_cm(8);
-          //print("%d\n", frontDist);
+          // print("%d\n", frontDist);
           // Update new direction.
           switch(direction) {
             case 'n':
@@ -363,7 +356,7 @@ int main() {
         }
       }
     }
-    drive_speed(0, 0);
+    drive_speed(0,0);
     ticksCounter += (int)_MOVE_UNIT;
 
     // Update new boxNum (box the robot is in) after moving by checking updated direction(which direction the robot the coming from).
@@ -390,36 +383,36 @@ int main() {
       // Final box, reposition for Phase 2.
       turn_pivot_function(-90);
 
-      // TEST CODE FOR PARALLEL ALIGN (ONLY APPLIES TO LEFT WALL, AS ONCE ROBOT IS PARALLEL TO LEFT WALL IT WILL BE STRAIGHT FOR ALL DIRECTIONS)
+      // Parallel alignment (Only applies to left wall, as once robot is parallel to left wall it will be straight for all directions.)
       pause(300);
       LMR[0] = ping_cm(8);
       parallel_align_left(LMR[0], parallelCounter);
       parallelCounter = 0;
 
-      //Check for distance (left).
+      // Check for distance (left).
       pause(300);
       frontDist = ping_cm(8);
-      //print("%d\n", frontDist);
+      // print("%d\n", frontDist);
       LMR[0] = frontDist;
       rePos = (LMR[0] - _MID_SPOT) * 10 / 3.25;
       drive_goto(rePos, rePos);
       ticksCounter += rePos;
 
       turn_pivot_function(90);
-      //Check for distance (front).
+      // Check for distance (front).
       pause(300);
       frontDist = ping_cm(8);
-      //print("%d\n", frontDist);
+      // print("%d\n", frontDist);
       LMR[1] = frontDist;
       rePos = (LMR[1] - _MID_SPOT) * 10 / 3.25;
       drive_goto(rePos, rePos);
       ticksCounter += rePos;
 
       turn_pivot_function(90);
-      //Check for distance (right).
+      // Check for distance (right).
       pause(300);
       frontDist = ping_cm(8);
-      //print("%d\n", frontDist);
+      // print("%d\n", frontDist);
       LMR[2] = frontDist;
       rePos = (LMR[2] - _MID_SPOT) * 10 / 3.25;
       drive_goto(rePos, rePos);
@@ -452,9 +445,9 @@ int main() {
   // print("\n");
 
   // print("Path back: ");
-  for (int i = midPoint; i < arrLen; i++) {
-    pathBack[i-midPoint] = pathSeq[i];
-  //  print("%d ", pathBack[i-midPoint]);
+  for (int i = 0; i < pathBackLength; i++) {
+    pathBack[i] = pathSeq[i+midPoint];
+    // print("%d ", pathBack[i]);
   }
   // print("\n");
 
@@ -476,23 +469,53 @@ int main() {
 
   // Choosing pathTo or pathBack as pathRace.
   int pathRaceLength = 0;
-  if (pathToLength <= pathBackLength) {
+  int pathTo_NumberOfCorners = 0;
+  int pathBack_NumberOfCorners = 0;
+
+  if (pathToLength < pathBackLength) {
     pathRaceLength = pathToLength;
   }
-  else {
+  else if (pathBackLength < pathToLength) {
     pathRaceLength = pathBackLength;
+  }
+  else {
+    // Same length for both, counting corners is required. Movement sequence with lesser corner turns is selected as race path.
+    pathTo_NumberOfCorners = count_path_corners(pathTo, pathToLength);
+    pathBack_NumberOfCorners = count_path_corners(pathBack, pathBackLength);
+    if (pathTo_NumberOfCorners <= pathBack_NumberOfCorners) {
+      pathRaceLength = pathToLength;
+    }
+    else {
+      pathRaceLength = pathBackLength;
+    }
   }
 
   int* pathRace = (int*)malloc(sizeof(int) * pathRaceLength);
 
-  if (pathToLength <= pathBackLength) {
+  if (pathToLength < pathBackLength) {
+    // Storing values of pathTo as pathRace.
     for (int i = 0; i < pathRaceLength; i++) {
       pathRace[i] = pathTo[i];
     }
   }
-  else {
+  else if (pathBackLength < pathToLength) {
+    // Storing values of pathBack as pathRace
     for (int i = 0; i < pathRaceLength; i++) {
       pathRace[i] = pathBack[i];
+    }
+  }
+  else {
+    if (pathTo_NumberOfCorners <= pathBack_NumberOfCorners) {
+      // Equal length, choose pathTo, lesser or equal corners
+      for (int i = 0; i < pathRaceLength; i++) {
+        pathRace[i] = pathTo[i];
+      }
+    }
+    else {
+      // Equal length, choose pathBack, lesser corners
+      for (int i = 0; i < pathRaceLength; i++) {
+        pathRace[i] = pathBack[i];
+      }
     }
   }
 
@@ -504,9 +527,12 @@ int main() {
   drive_getTicks(&ticks[0], &ticks[1]);
   ticksCounter = (ticks[0] + ticks[1])/2;
   // Adapting sensitivity to increased robot speed
-  kp = -6;
-  ki = -4;
-  kd = -2;
+  kp = -2;
+  ki = -1;
+  kd = -1;
+  // Free pathTo and pathBack, Phase 2 is using pathRace
+  free(pathTo);
+  free(pathBack);
 
   // Indicate ready to start Phase 2.
   for (int i = 0; i < 3; i++) {
@@ -572,7 +598,6 @@ int main() {
           }
           drive_getTicks(&ticks[0], &ticks[1]);
         }
-        // drive_speed(0, 0);
         drive_speed(raceSpd,raceSpd);
         // Robot is centered in box.
         isCurving = 0;
@@ -624,7 +649,6 @@ int main() {
           }
           drive_getTicks(&ticks[0], &ticks[1]);
         }
-        // drive_speed(0, 0);
         drive_speed(raceSpd,raceSpd);
       }
     }
@@ -635,8 +659,7 @@ int main() {
       if (isCurving) {
         // print("Curving-Right-Short\n");
         // Add required ticks to ticksCounter
-        // ticksCounter += (int)_CURVE_UNIT;
-        ticksCounter +=move_shortRightCurve();
+        ticksCounter += move_shortRightCurve();
       }
       else {
         // print("Curving-Right-Long\n");
@@ -685,10 +708,8 @@ int main() {
           }
           drive_getTicks(&ticks[0], &ticks[1]);
         }
-        // drive_speed(0, 0);
         drive_speed(raceSpd,raceSpd);
         // Add required ticks to ticksCounter
-        // ticksCounter += (int)_CURVE_UNIT;
         ticksCounter += move_shortRightCurve();
         isCurving = 1;
       }
@@ -700,7 +721,6 @@ int main() {
       if (isCurving) {
         // print("Curving-Left-Short\n");
         // Add required ticks to ticksCounter
-        // ticksCounter += (int)_CURVE_UNIT;
         ticksCounter += move_shortLeftCurve();
       }
       else {
@@ -750,22 +770,25 @@ int main() {
           }
           drive_getTicks(&ticks[0], &ticks[1]);
         }
-        // drive_speed(0, 0);
         drive_speed(raceSpd,raceSpd);
         // Add required ticks to ticksCounter
-        // ticksCounter += (int)_CURVE_UNIT;
         ticksCounter += move_shortLeftCurve();
         isCurving = 1;
       }
     }
   }
-  // Final movement.
-  drive_goto(_MOVE_UNIT,_MOVE_UNIT);
+
+  // Finishing move.
+  if (isCurving) {
+    // Move HALF standard box to finish
+    drive_goto(_MOVE_UNIT/2,_MOVE_UNIT/2);
+  }
+  else {
+    // Move standard box to finish
+    drive_goto(_MOVE_UNIT,_MOVE_UNIT);
+  }
   drive_speed(0,0);
 
-  free(pathTo);
-  free(pathBack);
   free(pathRace);
-  // print("Phase 2 completed.\n");
   return 0;
 }
