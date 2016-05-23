@@ -268,7 +268,7 @@ int count_path_corners(int *pathRace, int pathRaceLength) {
     return numberOfCorners;
 }
 
-int move_longRightCurve() {
+int move_shortRightSwerve() {
     int left_dist = (int) ((PI / 4) * ((float)_MOVE_UNIT / 2 + (_WHEEL_BASE/3.25) ));
     int right_dist = (int) ((PI / 4) * ((float)_MOVE_UNIT / 2 - (_WHEEL_BASE/3.25) ));
     float ratio = (float) right_dist / (float) left_dist;

@@ -557,7 +557,7 @@ int main() {
         ticksCounter += (int)_MOVE_UNIT/2;
         // move HALF standard unit
         while(((ticks[0]+ticks[1])/2) < ticksCounter) {
-          for (int dacVal = 0; dacVal < 160; dacVal += 40) {
+          for (int dacVal = 0; dacVal < 160; dacVal += 8) {
             dac_ctr(26, 0, dacVal);
             freqout(11,  1, 38000);
             irLeft += input(10);                          // Left side IR-sensor
@@ -609,7 +609,7 @@ int main() {
         ticksCounter += (int)_MOVE_UNIT;
         // move standard unit
         while(((ticks[0]+ticks[1])/2) < ticksCounter) {
-          for (int dacVal = 0; dacVal < 160; dacVal += 40) {
+          for (int dacVal = 0; dacVal < 160; dacVal += 8) {
             dac_ctr(26, 0, dacVal);
             freqout(11,  1, 38000);
             irLeft += input(10);                          // Left side IR-sensor
@@ -669,7 +669,7 @@ int main() {
         ticksCounter += (int)_MOVE_UNIT/2;
         // move HALF standard unit
         while(((ticks[0]+ticks[1])/2) < ticksCounter) {
-          for (int dacVal = 0; dacVal < 160; dacVal += 40) {
+          for (int dacVal = 0; dacVal < 160; dacVal += 8) {
             dac_ctr(26, 0, dacVal);
             freqout(11,  1, 38000);
             irLeft += input(10);                          // Left side IR-sensor
@@ -732,7 +732,7 @@ int main() {
         ticksCounter += (int)_MOVE_UNIT/2;
         // move HALF standard unit
         while(((ticks[0]+ticks[1])/2) < ticksCounter) {
-          for (int dacVal = 0; dacVal < 160; dacVal += 40) {
+          for (int dacVal = 0; dacVal < 160; dacVal += 8) {
             dac_ctr(26, 0, dacVal);
             freqout(11,  1, 38000);
             irLeft += input(10);                          // Left side IR-sensor
