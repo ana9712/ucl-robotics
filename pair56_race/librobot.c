@@ -1,6 +1,6 @@
- /*
-  Created by Matthew Bell and Wayne Tsui.
-*/
+/*
+   Created by Matthew Bell and Wayne Tsui.
+   */
 
 #include "librobot.h"
 
@@ -13,7 +13,7 @@ int calculate_arc_length(int angle) {
 
 // In pivot turn, wheel base = 52.9
 int calculate_pivot_length(int angle) {
-  return (calculate_arc_length(angle)/2);
+    return (calculate_arc_length(angle)/2);
 }
 
 void turn_function(int angle) {
@@ -85,19 +85,19 @@ void turn_pivot_function(int angle) {
 
 // SD CARD FUNCTIONS
 /*
-void log_write(FILE* fp, double* position_coords) {
-    // position_coords 0, 1, 2
-    fprintf(fp, "%.2f %.2f %.2f\n", position_coords[0], position_coords[1], position_coords[2] * 180/PI);
+   void log_write(FILE* fp, double* position_coords) {
+// position_coords 0, 1, 2
+fprintf(fp, "%.2f %.2f %.2f\n", position_coords[0], position_coords[1], position_coords[2] * 180/PI);
 }
 
 double *log_read(FILE* fp) {
-  double *coords = (double*)malloc(3 * sizeof(double));
-  if (fscanf(fp, "%d %d %d", coords, coords+1, coords+2)) {
-    return coords;
-  }
-  else {
-    return NULL;
-  }
+double *coords = (double*)malloc(3 * sizeof(double));
+if (fscanf(fp, "%d %d %d", coords, coords+1, coords+2)) {
+return coords;
+}
+else {
+return NULL;
+}
 }
 */
 
@@ -122,13 +122,13 @@ double *log_read(FILE* fp) {
 // else returns -1.
 // *implements interpolation search for fast searching.
 int int_in_arr(int x, int *a, int l) {
-  int i = 0;
-  while (i < l) {
-    if (a[i] == x)
-      return i;
-    i++;
-  }
-  return -1;
+    int i = 0;
+    while (i < l) {
+        if (a[i] == x)
+            return i;
+        i++;
+    }
+    return -1;
 }
 
 // Deletes this element from array.
@@ -136,109 +136,109 @@ int int_in_arr(int x, int *a, int l) {
 // index - index of element to delete
 // l     - length of array
 void el_del(int *a, int index, int l) {
-  for (int i = index; i < l-1; i++) {
-    a[i] = a[i+1];
-  }
+    for (int i = index; i < l-1; i++) {
+        a[i] = a[i+1];
+    }
 }
 
 // l length
 // a array
 void rev_array(int *l, int *a) {
-  // Why is length a pointer? Well, we're going to
-  // use side effects to modify it so that we can
-  // return the new length as well as the array.
-  //
-  // The variables passed to this function *will*
-  // be modified.
+    // Why is length a pointer? Well, we're going to
+    // use side effects to modify it so that we can
+    // return the new length as well as the array.
+    //
+    // The variables passed to this function *will*
+    // be modified.
 
-  // swapping elements from the outside going
-  // inwards.
-  int i = 0; int j = *l - 1;
-  while (i < j) {
-    int tmp = a[i];
-    a[i++] = a[j];
-    a[j--] = tmp;
-  }
+    // swapping elements from the outside going
+    // inwards.
+    int i = 0; int j = *l - 1;
+    while (i < j) {
+        int tmp = a[i];
+        a[i++] = a[j];
+        a[j--] = tmp;
+    }
 }
 
 void shortest_path(int *l, int *a) {
-  // now, remove duplicate paths. Add first occurence of
-  // each number to the array and then search each time.
-  int search_arr[*l]; int arr_ptr = -1; int i = (*l)-1;
-  while (i >= 0) {
-    if (int_in_arr(a[i], search_arr, arr_ptr+1) >= 0) {
-      // you dun messed up. remove path.
-      // remove up to other occurence of a[i].
-      int j = i+1; int x;
-      do {
-        x = a[j];
-        el_del(a, j, *l);
-        (*l)--;
-      } while (x != a[i]);
-      i--;
+    // now, remove duplicate paths. Add first occurence of
+    // each number to the array and then search each time.
+    int search_arr[*l]; int arr_ptr = -1; int i = (*l)-1;
+    while (i >= 0) {
+        if (int_in_arr(a[i], search_arr, arr_ptr+1) >= 0) {
+            // you dun messed up. remove path.
+            // remove up to other occurence of a[i].
+            int j = i+1; int x;
+            do {
+                x = a[j];
+                el_del(a, j, *l);
+                (*l)--;
+            } while (x != a[i]);
+            i--;
+        }
+        else {
+            search_arr[++arr_ptr] = a[i--];
+        }
     }
-    else {
-      search_arr[++arr_ptr] = a[i--];
-    }
-  }
 }
 
 void parallel_align_left(int pingDist, int counter) {
-  // Tries to adjust robot to be parallel to the left side of the wall, calls before each box movement.
-  int newPingDist = 0;
-  // Adjust towards the left. Value of -8 is equivalent to drive goto -2, 2.
-  turn_pivot_function(-_PARALLEL_ALIGN_ANGLE);
-  // Check new ping distance.
-  pause(300);
-  newPingDist = ping_cm(8);
-  if ((pingDist - newPingDist) > 0) {
-    // Continue aligning towards the left.
-    counter++;
-    return parallel_align_left(newPingDist, counter);
-  }
-  else {
-    // Turn back, not a good position.
-    turn_pivot_function(_PARALLEL_ALIGN_ANGLE);
-    // Try adjusting towards the right if left side is not applicable.
-    if (counter == 0) {
-      return parallel_align_right(pingDist);
+    // Tries to adjust robot to be parallel to the left side of the wall, calls before each box movement.
+    int newPingDist = 0;
+    // Adjust towards the left. Value of -8 is equivalent to drive goto -2, 2.
+    turn_pivot_function(-_PARALLEL_ALIGN_ANGLE);
+    // Check new ping distance.
+    pause(300);
+    newPingDist = ping_cm(8);
+    if ((pingDist - newPingDist) > 0) {
+        // Continue aligning towards the left.
+        counter++;
+        return parallel_align_left(newPingDist, counter);
     }
-  }
-  return;
+    else {
+        // Turn back, not a good position.
+        turn_pivot_function(_PARALLEL_ALIGN_ANGLE);
+        // Try adjusting towards the right if left side is not applicable.
+        if (counter == 0) {
+            return parallel_align_right(pingDist);
+        }
+    }
+    return;
 }
 
 void parallel_align_right(int pingDist) {
-  // Tries to adjust robot to be parallel to the left side of the wall, calls before each box movement.
-  int newPingDist = 0;
-  // Adjust towards the right.
-  turn_pivot_function(_PARALLEL_ALIGN_ANGLE);
-  // Check new ping distance.
-  pause(300);
-  newPingDist = ping_cm(8);
-  if ((pingDist - newPingDist) > 0) {
-    return parallel_align_right(newPingDist);
-  }
-  else {
-    // Turn back, not a good position.
-    turn_pivot_function(-_PARALLEL_ALIGN_ANGLE);
-  }
-  return;
+    // Tries to adjust robot to be parallel to the left side of the wall, calls before each box movement.
+    int newPingDist = 0;
+    // Adjust towards the right.
+    turn_pivot_function(_PARALLEL_ALIGN_ANGLE);
+    // Check new ping distance.
+    pause(300);
+    newPingDist = ping_cm(8);
+    if ((pingDist - newPingDist) > 0) {
+        return parallel_align_right(newPingDist);
+    }
+    else {
+        // Turn back, not a good position.
+        turn_pivot_function(-_PARALLEL_ALIGN_ANGLE);
+    }
+    return;
 }
 
 int move_shortLeftCurve() {
-  int left_dist = (int)( ((float)_MOVE_UNIT - (_WHEEL_BASE/3.25)) * PI / 4 );
-  int right_dist = (int)( ((float)_MOVE_UNIT + (_WHEEL_BASE/3.25)) * PI / 4 );
-  float ratio = (float)left_dist / (float)right_dist;
-  drive_speed((int)( 128 * ratio ),128);
-  int tick_acc[2];
-  drive_getTicks(&tick_acc[0], &tick_acc[1]);
-  int tmp[2] = {tick_acc[0], tick_acc[1]};
-  while (( tmp[0] - tick_acc[0] < left_dist) && ( tmp[1] - tick_acc[1] < right_dist)) {
-    pause(10);
-    drive_getTicks(&tmp[0], &tmp[1]);
-  }
-  drive_speed(128,128);
-  return (tmp[0] + tmp[1] - tick_acc[0] - tick_acc[1]) / 2;
+    int left_dist = (int)( ((float)_MOVE_UNIT - (_WHEEL_BASE/3.25)) * PI / 4 );
+    int right_dist = (int)( ((float)_MOVE_UNIT + (_WHEEL_BASE/3.25)) * PI / 4 );
+    float ratio = (float)left_dist / (float)right_dist;
+    drive_speed((int)( 128 * ratio ),128);
+    int tick_acc[2];
+    drive_getTicks(&tick_acc[0], &tick_acc[1]);
+    int tmp[2] = {tick_acc[0], tick_acc[1]};
+    while (( tmp[0] - tick_acc[0] < left_dist) && ( tmp[1] - tick_acc[1] < right_dist)) {
+        pause(10);
+        drive_getTicks(&tmp[0], &tmp[1]);
+    }
+    drive_speed(128,128);
+    return (tmp[0] + tmp[1] - tick_acc[0] - tick_acc[1]) / 2;
 }
 
 int move_shortRightCurve() {
@@ -258,11 +258,11 @@ int move_shortRightCurve() {
 }
 
 int count_path_corners(int *pathRace, int pathRaceLength) {
-  int numberOfCorners = 0;
-  for (int i = 1; i < pathRaceLength-1; i++) {
-    if ((pathRace[i] - pathRace[i-1]) != (pathRace[i+1] - pathRace[i])) {
-      numberOfCorners++;
+    int numberOfCorners = 0;
+    for (int i = 1; i < pathRaceLength-1; i++) {
+        if ((pathRace[i] - pathRace[i-1]) != (pathRace[i+1] - pathRace[i])) {
+            numberOfCorners++;
+        }
     }
-  }
-  return numberOfCorners;
+    return numberOfCorners;
 }
