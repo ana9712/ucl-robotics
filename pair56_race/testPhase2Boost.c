@@ -11,14 +11,26 @@
 
 #define _MOVE_UNIT (int)(407/3.25)
 
+#define _RACE_SPEED (int)128
+
+volatile int errorVal = 0;
+volatile int correctionSpd = 0;
+volatile int isCurving = 0;
+volatile int left_dist = 0;
+volatile int right_dist = 0;
+volatile float ratio = 0;
 
 int move_shortLeftCurve() {
-  int left_dist = (int)( ((float)_MOVE_UNIT - (_WHEEL_BASE/3.25)) * PI / 4 );
-  int right_dist = (int)( ((float)_MOVE_UNIT + (_WHEEL_BASE/3.25)) * PI / 4 );
+  isCurving = 1;
+  // int left_dist = (int)( ((float)_MOVE_UNIT - (_WHEEL_BASE/3.25)) * PI / 4 );
+  left_dist = (int)( ((float)_MOVE_UNIT - (_WHEEL_BASE/3.25)) * PI / 4 );
+  // int right_dist = (int)( ((float)_MOVE_UNIT + (_WHEEL_BASE/3.25)) * PI / 4 );
+  right_dist = (int)( ((float)_MOVE_UNIT + (_WHEEL_BASE/3.25)) * PI / 4 );
   print("LEFT: %d, RIGHT: %d\n", left_dist, right_dist);
-  float ratio = (float)left_dist / (float)right_dist;
+  // float ratio = (float)left_dist / (float)right_dist;
+  ratio = (float)left_dist / (float)right_dist;
   print("RATIO: %f\n", ratio);
-  drive_speed((int)( 128 * ratio ),128);
+  // drive_speed((int)( _RACE_SPEED * ratio ),_RACE_SPEED);
   int tick_acc[2];
   drive_getTicks(&tick_acc[0], &tick_acc[1]);
   int tmp[2] = {tick_acc[0], tick_acc[1]};
@@ -27,17 +39,22 @@ int move_shortLeftCurve() {
     drive_getTicks(&tmp[0], &tmp[1]);
     print("LEFT: %d, RIGHT: %d\n", tmp[0], tmp[1]);
   }
-  drive_speed(128,128);
+  drive_speed(_RACE_SPEED,_RACE_SPEED);
+  isCurving = 0;
   return (tmp[0] + tmp[1] - tick_acc[0] - tick_acc[1]) / 2;
 }
 
 int move_shortRightCurve() {
-  int right_dist = (int)( ((float)_MOVE_UNIT - (_WHEEL_BASE/3.25)) * PI / 4 );
-  int left_dist = (int)( ((float)_MOVE_UNIT + (_WHEEL_BASE/3.25)) * PI / 4 );
+  isCurving = 1;
+  // int right_dist = (int)( ((float)_MOVE_UNIT - (_WHEEL_BASE/3.25) - 5) * PI / 4 );
+  right_dist = (int)( ((float)_MOVE_UNIT - (_WHEEL_BASE/3.25)) * PI / 4 );
+  // int left_dist = (int)( ((float)_MOVE_UNIT + (_WHEEL_BASE/3.25) - 5) * PI / 4 );
+  left_dist = (int)( ((float)_MOVE_UNIT + (_WHEEL_BASE/3.25)) * PI / 4 );
   print("LEFT: %d, RIGHT: %d\n", left_dist, right_dist);
-  float ratio = (float)right_dist / (float)left_dist;
+  // float ratio = (float)right_dist / (float)left_dist;
+  ratio = (float)right_dist / (float)left_dist;
   print("RATIO: %f\n", ratio);
-  drive_speed(128, (int)( 128 * ratio ));
+  // drive_speed(_RACE_SPEED, (int)( _RACE_SPEED * ratio ));
   int tick_acc[2];
   drive_getTicks(&tick_acc[0], &tick_acc[1]);
   int tmp[2] = {tick_acc[0], tick_acc[1]};
@@ -46,7 +63,8 @@ int move_shortRightCurve() {
     drive_getTicks(&tmp[0], &tmp[1]);
     print("LEFT: %d, RIGHT: %d\n", tmp[0], tmp[1]);
   }
-  drive_speed(128,128);
+  drive_speed(_RACE_SPEED,_RACE_SPEED);
+  isCurving = 0;
   return (tmp[0] + tmp[1] - tick_acc[0] - tick_acc[1]) / 2;
 }
 
@@ -60,15 +78,42 @@ int count_path_corners(int *pathRace, int pathRaceLength) {
   return numberOfCorners;
 }
 
+void race() {
+  while(1) {
+    while(!isCurving) {
+      if (errorVal == 0) {
+        drive_speed(_RACE_SPEED, _RACE_SPEED);
+      }
+      // Robot is too near to right wall.
+      else if (errorVal < 0) {
+        // Move left, correctionSpd is positive.
+        drive_speed(_RACE_SPEED-correctionSpd, _RACE_SPEED);
+      }
+      // Robot is too near to left wall.
+      else if (errorVal > 0) {
+        // Move right, correctionSpd is negative.
+        drive_speed(_RACE_SPEED, _RACE_SPEED+correctionSpd);
+      }
+    }
+    while(isCurving) {
+      if (left_dist < right_dist) {
+        drive_speed((int)( _RACE_SPEED * ratio ),_RACE_SPEED);
+      }
+      else {
+        drive_speed(_RACE_SPEED, (int)( _RACE_SPEED * ratio ));
+      }
+    }
+  }
+}
 
 int main()                                    // Main function
 {
   int irLeft = 0, irRight = 0;
   int ticksCounter = 0;
-  int errorVal, prevErrorVal, totalErrorVal = 0, errorDiff = 0;
+  int prevErrorVal, totalErrorVal = 0, errorDiff = 0;
   int kp = -2, ki = -1, kd = -1;
   // int kp = 0, ki = 0, kd = 0;              // For no PID testing
-  int baseSpd = 128, raceSpd = 128, correctionSpd;
+  int baseSpd = 128;
   int ticks[2];
   ticks[0] = 0, ticks[1] = 0;
 
@@ -76,7 +121,7 @@ int main()                                    // Main function
   int pathRaceLength = 8;
 
   // Phase 2 Route Optimisation Variables
-  int isCurving = 0;
+  int curved = 0;
   int boxNumDiff_Ahead = 0;
   int boxNumDiff_Behind = 0;
   // Reset ticksCounter
@@ -87,6 +132,7 @@ int main()                                    // Main function
   int numberOfCorners = count_path_corners(pathRace, 8);
   print("Number of Corners: %d.\n", numberOfCorners);
 
+  int* cog = cog_run(race, 128);
 
   for (int i = 1; i < pathRaceLength-1; i++) {
     print("Cycle: %d\n", i);
@@ -96,7 +142,7 @@ int main()                                    // Main function
 
     if ((abs(boxNumDiff_Behind) == 4 && abs(boxNumDiff_Ahead) == 4) ||
         (abs(boxNumDiff_Behind) == 1 && abs(boxNumDiff_Ahead) == 1)) {
-      if (isCurving) {
+      if (curved) {
         print("Straight-Curving\n");
         // Add required ticks to ticksCounter
         ticksCounter += (int)_MOVE_UNIT/2;
@@ -127,26 +173,11 @@ int main()                                    // Main function
 
           correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
 
-          if (errorVal == 0) {
-            drive_speed(raceSpd, raceSpd);
-          }
-
-          // Robot is too near to right wall.
-          else if (errorVal < 0) {
-            // Move left, correctionSpd is positive.
-            drive_speed(raceSpd-correctionSpd, raceSpd);
-          }
-          // Robot is too near to left wall.
-          else if (errorVal > 0) {
-            // Move right, correctionSpd is negative.
-            drive_speed(raceSpd, raceSpd+correctionSpd);
-          }
-          // pause(10);
           drive_getTicks(&ticks[0], &ticks[1]);
         }
-        drive_speed(raceSpd,raceSpd);
+        drive_speed(_RACE_SPEED,_RACE_SPEED);
         // Robot is centered in box.
-        isCurving = 0;
+        curved = 0;
       }
       else {
         print("Straight-Straight\n");
@@ -182,33 +213,18 @@ int main()                                    // Main function
 
           correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
 
-          if (errorVal == 0) {
-            drive_speed(raceSpd, raceSpd);
-          }
-
-          // Robot is too near to right wall.
-          else if (errorVal < 0) {
-            // Move left, correctionSpd is positive.
-            drive_speed(raceSpd-correctionSpd, raceSpd);
-          }
-          // Robot is too near to left wall.
-          else if (errorVal > 0) {
-            // Move right, correctionSpd is negative.
-            drive_speed(raceSpd, raceSpd+correctionSpd);
-          }
-          // pause(10);
           drive_getTicks(&ticks[0], &ticks[1]);
         }
         drive_getTicks(&ticks[0], &ticks[1]);
         print("Left test ticks2: %d. Right test ticks2: %d.\n", ticks[0], ticks[1]);
-        drive_speed(raceSpd,raceSpd);
+        drive_speed(_RACE_SPEED,_RACE_SPEED);
       }
     }
     else if ((boxNumDiff_Behind == 4 && boxNumDiff_Ahead == 1) ||
              (boxNumDiff_Behind == -4 && boxNumDiff_Ahead == -1) ||
              (boxNumDiff_Behind == 1 && boxNumDiff_Ahead == -4) ||
              (boxNumDiff_Behind == -1 && boxNumDiff_Ahead == 4)) {
-      if (isCurving) {
+      if (curved) {
         print("Curving-Right-Short\n");
         // Add required ticks to ticksCounter
         ticksCounter += move_shortRightCurve();
@@ -244,34 +260,19 @@ int main()                                    // Main function
 
           correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
 
-          if (errorVal == 0) {
-            drive_speed(raceSpd, raceSpd);
-          }
-
-          // Robot is too near to right wall.
-          else if (errorVal < 0) {
-            // Move left, correctionSpd is positive.
-            drive_speed(raceSpd-correctionSpd, raceSpd);
-          }
-          // Robot is too near to left wall.
-          else if (errorVal > 0) {
-            // Move right, correctionSpd is negative.
-            drive_speed(raceSpd, raceSpd+correctionSpd);
-          }
-          // pause(10);
           drive_getTicks(&ticks[0], &ticks[1]);
         }
-        drive_speed(raceSpd,raceSpd);
+        drive_speed(_RACE_SPEED,_RACE_SPEED);
         // Add required ticks to ticksCounter
         ticksCounter += move_shortRightCurve();
-        isCurving = 1;
+        curved = 1;
       }
     }
     else if ((boxNumDiff_Behind == 4 && boxNumDiff_Ahead == -1) ||
              (boxNumDiff_Behind == -4 && boxNumDiff_Ahead == 1) ||
              (boxNumDiff_Behind == 1 && boxNumDiff_Ahead == 4) ||
              (boxNumDiff_Behind == -1 && boxNumDiff_Ahead == -4)) {
-      if (isCurving) {
+      if (curved) {
         print("Curving-Left-Short\n");
         // Add required ticks to ticksCounter
         ticksCounter += move_shortLeftCurve();
@@ -307,33 +308,20 @@ int main()                                    // Main function
 
           correctionSpd = (kp * errorVal) + (ki * totalErrorVal) + (kd * errorDiff);
 
-          if (errorVal == 0) {
-            drive_speed(raceSpd, raceSpd);
-          }
-
-          // Robot is too near to right wall.
-          else if (errorVal < 0) {
-            // Move left, correctionSpd is positive.
-            drive_speed(raceSpd-correctionSpd, raceSpd);
-          }
-          // Robot is too near to left wall.
-          else if (errorVal > 0) {
-            // Move right, correctionSpd is negative.
-            drive_speed(raceSpd, raceSpd+correctionSpd);
-          }
-          // pause(10);
           drive_getTicks(&ticks[0], &ticks[1]);
         }
-        drive_speed(raceSpd,raceSpd);
+        drive_speed(_RACE_SPEED,_RACE_SPEED);
         // Add required ticks to ticksCounter
         ticksCounter += move_shortLeftCurve();
-        isCurving = 1;
+        curved = 1;
       }
     }
   }
 
-  // Finishing move.
-  if (isCurving) {
+  cog_end(cog);
+  drive_speed(_RACE_SPEED,_RACE_SPEED);
+
+  if (curved) {
     // Move HALF standard box to finish
     drive_goto(_MOVE_UNIT/2,_MOVE_UNIT/2);
   }

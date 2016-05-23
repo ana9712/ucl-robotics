@@ -242,8 +242,8 @@ int move_shortLeftCurve() {
 }
 
 int move_shortRightCurve() {
-  int right_dist = (int)( ((float)_MOVE_UNIT - (_WHEEL_BASE/3.25) - 5) * PI / 4 );
-  int left_dist = (int)( ((float)_MOVE_UNIT + (_WHEEL_BASE/3.25) - 5) * PI / 4 );
+  int right_dist = (int)( ((float)_MOVE_UNIT - (_WHEEL_BASE/3.25)) * PI / 4 );
+  int left_dist = (int)( ((float)_MOVE_UNIT + (_WHEEL_BASE/3.25)) * PI / 4 );
   float ratio = (float)right_dist / (float)left_dist;
   drive_speed(128, (int)( 128 * ratio ));
   int tick_acc[2];
