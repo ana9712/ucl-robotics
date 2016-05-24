@@ -73,6 +73,8 @@ int move_shortLeftCurve();
 
 int move_shortRightCurve();
 
-int move_longRightCurve();
-
 int count_path_corners(int *pathRace, int pathRaceLength);
+
+int move_shortLeftSwerve();
+
+int move_shortRightSwerve();

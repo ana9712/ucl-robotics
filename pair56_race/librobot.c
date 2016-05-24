@@ -268,42 +268,44 @@ int count_path_corners(int *pathRace, int pathRaceLength) {
     return numberOfCorners;
 }
 
+int move_shortLeftSwerve() {
+  int tick_acc[2];
+  int tmp[2] = {tick_acc[0], tick_acc[1]};
+  drive_getTicks(&tick_acc[0], &tick_acc[1]);
+
+  drive_speed(50, 128);
+  pause(400);
+  drive_speed(128,128);
+  pause(450);
+  drive_speed(128,128);
+
+  drive_speed(128,128);
+  pause(450);
+  drive_speed(128, 50);
+  pause(400);
+  drive_speed(128,128);
+
+  drive_getTicks(&tmp[0], &tmp[1]);
+  return (tmp[0] + tmp[1] - tick_acc[0] - tick_acc[1]) / 2;
+}
+
 int move_shortRightSwerve() {
-    int left_dist = (int) ((PI / 4) * ((float)_MOVE_UNIT / 2 + (_WHEEL_BASE/3.25) ));
-    int right_dist = (int) ((PI / 4) * ((float)_MOVE_UNIT / 2 - (_WHEEL_BASE/3.25) ));
-    float ratio = (float) right_dist / (float) left_dist;
+  int tick_acc[2];
+  int tmp[2] = {tick_acc[0], tick_acc[1]};
+  drive_getTicks(&tick_acc[0], &tick_acc[1]);
 
-    drive_speed(128, (int)(128* ratio));
-    int tick_acc[2];
-    drive_getTicks(&tick_acc[0], &tick_acc[1]);
-    int tmp[2] = {tick_acc[0], tick_acc[1]};
-    // starting ticks, used at end to calc total ticks.
-    int orig[2] = {tick_acc[0], tick_acc[1]};
+  drive_speed(128, 50);
+  pause(400);
+  drive_speed(128,128);
+  pause(450);
+  drive_speed(128,128);
 
-    // turn right
-    while (( tmp[0] - tick_acc[0] < left_dist) && ( tmp[1] - tick_acc[1] < right_dist)) {
-        pause(10);
-        drive_getTicks(&tmp[0], &tmp[1]);
-    }
+  drive_speed(128,128);
+  pause(450);
+  drive_speed(50, 128);
+  pause(400);
+  drive_speed(128,128);
 
-    // straight line, reset tick_acc.
-    drive_speed(128,128);
-    tick_acc[0] = tmp[0]; tick_acc[1] = tmp[1];
-
-    int dist = (int)(2*(sqrt(2*_MOVE_UNIT) - (2 * (_WHEEL_BASE/3.25) * sin(PI / 8)) ));
-    while ((tmp[0] - tick_acc[0]) < dist) {
-        pause(10);
-        drive_getTicks(&tmp[0], &tmp[1]);
-    }
-
-    // now ready to turn left. left/right swapped
-    drive_speed((int)(128 * ratio), 128);
-    tick_acc[0] = tmp[0]; tick_acc[1] = tmp[1];
-    while (( tmp[0] - tick_acc[0] < right_dist) && ( tmp[1] - tick_acc[1] < left_dist)) {
-        pause(10);
-        drive_getTicks(&tmp[0], &tmp[1]);
-    }
-    
-    //done.
-    return (tmp[0] + tmp[1] - orig[0] - orig[1]) / 2;
+  drive_getTicks(&tmp[0], &tmp[1]);
+  return (tmp[0] + tmp[1] - tick_acc[0] - tick_acc[1]) / 2;
 }
