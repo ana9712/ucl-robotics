@@ -234,7 +234,7 @@ int move_shortLeftCurve() {
     drive_getTicks(&tick_acc[0], &tick_acc[1]);
     int tmp[2] = {tick_acc[0], tick_acc[1]};
     while (( tmp[0] - tick_acc[0] < left_dist) && ( tmp[1] - tick_acc[1] < right_dist)) {
-        pause(10);
+        // pause(10);
         drive_getTicks(&tmp[0], &tmp[1]);
     }
     drive_speed(128,128);
@@ -250,7 +250,7 @@ int move_shortRightCurve() {
   drive_getTicks(&tick_acc[0], &tick_acc[1]);
   int tmp[2] = {tick_acc[0], tick_acc[1]};
   while (( tmp[0] - tick_acc[0] < left_dist) && ( tmp[1] - tick_acc[1] < right_dist)) {
-    pause(10);
+    // pause(10);
     drive_getTicks(&tmp[0], &tmp[1]);
   }
   drive_speed(128,128);
