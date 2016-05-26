@@ -470,6 +470,8 @@ int main() {
   int pathRaceLength = 0;
   int pathTo_NumberOfCorners = 0;
   int pathBack_NumberOfCorners = 0;
+  int pathTo_NumberOfSwerves = 0;
+  int pathBack_NumberOfSwerves = 0;
 
   if (pathToLength < pathBackLength) {
     pathRaceLength = pathToLength;
@@ -478,14 +480,26 @@ int main() {
     pathRaceLength = pathBackLength;
   }
   else {
-    // Same length for both, counting corners is required. Movement sequence with lesser corner turns is selected as race path.
+    // Same length for both, counting corners and swerves is required.
     pathTo_NumberOfCorners = count_path_corners(pathTo, pathToLength);
     pathBack_NumberOfCorners = count_path_corners(pathBack, pathBackLength);
+    pathTo_NumberOfSwerves = count_path_swerves(pathTo, pathToLength);
+    pathBack_NumberOfSwerves = count_path_swerves(pathBack, pathBackLength);
     if (pathTo_NumberOfCorners <= pathBack_NumberOfCorners) {
-      pathRaceLength = pathToLength;
+      if (pathBack_NumberOfSwerves > pathTo_NumberOfSwerves) {
+        pathRaceLength = pathBackLength;
+      }
+      else {
+        pathRaceLength = pathToLength;
+      }
     }
     else {
-      pathRaceLength = pathBackLength;
+      if (pathTo_NumberOfSwerves > pathBack_NumberOfSwerves) {
+        pathRaceLength = pathToLength;
+      }
+      else {
+        pathRaceLength = pathBackLength;
+      }
     }
   }
 
@@ -505,15 +519,27 @@ int main() {
   }
   else {
     if (pathTo_NumberOfCorners <= pathBack_NumberOfCorners) {
-      // Equal length, choose pathTo, lesser or equal corners
-      for (int i = 0; i < pathRaceLength; i++) {
-        pathRace[i] = pathTo[i];
+      if (pathBack_NumberOfSwerves > pathTo_NumberOfSwerves) {
+        for (int i = 0; i < pathRaceLength; i++) {
+          pathRace[i] = pathBack[i];
+        }
+      }
+      else {
+        for (int i = 0; i < pathRaceLength; i++) {
+          pathRace[i] = pathTo[i];
+        }
       }
     }
     else {
-      // Equal length, choose pathBack, lesser corners
-      for (int i = 0; i < pathRaceLength; i++) {
-        pathRace[i] = pathBack[i];
+      if (pathTo_NumberOfSwerves > pathBack_NumberOfSwerves) {
+        for (int i = 0; i < pathRaceLength; i++) {
+          pathRace[i] = pathTo[i];
+        }
+      }
+      else {
+        for (int i = 0; i < pathRaceLength; i++) {
+          pathRace[i] = pathBack[i];
+        }
       }
     }
   }

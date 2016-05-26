@@ -270,42 +270,102 @@ int count_path_corners(int *pathRace, int pathRaceLength) {
 
 int move_shortLeftSwerve() {
   int tick_acc[2];
-  int tmp[2] = {tick_acc[0], tick_acc[1]};
   drive_getTicks(&tick_acc[0], &tick_acc[1]);
+  int tmp[2] = {tick_acc[0], tick_acc[1]};
+  // starting ticks, used at end to calc total ticks.
+  int orig[2] = {tick_acc[0], tick_acc[1]};
 
-  drive_speed(50, 128);
-  pause(400);
-  drive_speed(128,128);
-  pause(450);
-  drive_speed(128,128);
+  float left_dist = (float)( ((_MOVE_UNIT/4) - (_WHEEL_BASE / 3.25 / 2)) * 5 * PI / 16);
+  float right_dist = (float)( ((_MOVE_UNIT/4) + (_WHEEL_BASE / 3.25 / 2)) * 5 * PI / 16);
+  float ratio = (float) left_dist / (float) right_dist;
 
-  drive_speed(128,128);
-  pause(450);
-  drive_speed(128, 50);
-  pause(400);
-  drive_speed(128,128);
+  int totalSwerveDist = (int)(sqrt(2) * _MOVE_UNIT);
+  int curveLen = (int)( sqrt(2 * pow(_MOVE_UNIT/4,2) - (2 * pow(_MOVE_UNIT/4,2) * cos(5 * PI / 16))));
+  int strLen = totalSwerveDist - (2 * curveLen);
 
-  drive_getTicks(&tmp[0], &tmp[1]);
-  return (tmp[0] + tmp[1] - tick_acc[0] - tick_acc[1]) / 2;
+  // turn left
+  drive_speed((int)(128 * ratio), 128);
+
+  while (( tmp[0] - tick_acc[0] < (int)left_dist) && ( tmp[1] - tick_acc[1] < (int)right_dist)) {
+    // pause(10);
+    drive_getTicks(&tmp[0], &tmp[1]);
+  }
+
+  // go straight.
+  drive_speed(128,128);
+  tick_acc[0] = tmp[0]; tick_acc[1] = tmp[1];
+
+  while ((tmp[0] - tick_acc[0]) < strLen) {
+    // pause(10);
+    drive_getTicks(&tmp[0], &tmp[1]);
+  }
+
+  // now ready to turn right. left/right swapped
+  drive_speed(128, (int)(128 * ratio));
+  tick_acc[0] = tmp[0]; tick_acc[1] = tmp[1];
+  while (( tmp[0] - tick_acc[0] < (int)right_dist) && ( tmp[1] - tick_acc[1] < (int)left_dist)) {
+    // pause(10);
+    drive_getTicks(&tmp[0], &tmp[1]);
+  }
+
+  //done.
+  drive_speed(128,128);
+  return (tmp[0] + tmp[1] - orig[0] - orig[1]) / 2;
 }
 
 int move_shortRightSwerve() {
   int tick_acc[2];
-  int tmp[2] = {tick_acc[0], tick_acc[1]};
   drive_getTicks(&tick_acc[0], &tick_acc[1]);
+  int tmp[2] = {tick_acc[0], tick_acc[1]};
+  // starting ticks, used at end to calc total ticks.
+  int orig[2] = {tick_acc[0], tick_acc[1]};
 
-  drive_speed(128, 50);
-  pause(400);
-  drive_speed(128,128);
-  pause(450);
-  drive_speed(128,128);
+  float left_dist = (float)( ((_MOVE_UNIT/4) + (_WHEEL_BASE / 3.25 / 2)) * 5 * PI / 16);
+  float right_dist = (float)( ((_MOVE_UNIT/4) - (_WHEEL_BASE / 3.25 / 2)) * 5 * PI / 16);
+  float ratio = (float) right_dist / (float) left_dist;
 
-  drive_speed(128,128);
-  pause(450);
-  drive_speed(50, 128);
-  pause(400);
-  drive_speed(128,128);
+  int totalSwerveDist = (int)(sqrt(2) * _MOVE_UNIT);
+  int curveLen = (int)( sqrt(2 * pow(_MOVE_UNIT/4,2) - (2 * pow(_MOVE_UNIT/4,2) * cos(5 * PI / 16))));
+  int strLen = totalSwerveDist - (2 * curveLen);
 
-  drive_getTicks(&tmp[0], &tmp[1]);
-  return (tmp[0] + tmp[1] - tick_acc[0] - tick_acc[1]) / 2;
+  // turn right
+  drive_speed(128, (int)(128 * ratio));
+
+  while (( tmp[0] - tick_acc[0] < (int)left_dist) && ( tmp[1] - tick_acc[1] < (int)right_dist)) {
+    // pause(10);
+    drive_getTicks(&tmp[0], &tmp[1]);
+  }
+
+  // go straight.
+  drive_speed(128,128);
+  tick_acc[0] = tmp[0]; tick_acc[1] = tmp[1];
+
+  while ((tmp[0] - tick_acc[0]) < strLen) {
+    // pause(10);
+    drive_getTicks(&tmp[0], &tmp[1]);
+  }
+
+  // now ready to turn left. left/right swapped
+  drive_speed((int)(128 * ratio), 128);
+  tick_acc[0] = tmp[0]; tick_acc[1] = tmp[1];
+  while (( tmp[0] - tick_acc[0] < (int)right_dist) && ( tmp[1] - tick_acc[1] < (int)left_dist)) {
+    // pause(10);
+    drive_getTicks(&tmp[0], &tmp[1]);
+  }
+
+  //done.
+  drive_speed(128,128);
+  return (tmp[0] + tmp[1] - orig[0] - orig[1]) / 2;
+}
+
+int count_path_swerves(int *pathRace, int pathRaceLength) {
+  int numberOfSwerves = 0;
+  for (int i = 1; i < pathRaceLength-2; i++) {
+    if ((pathRace[i] - pathRace[i-1]) != (pathRace[i+1] - pathRace[i]) &&
+        (pathRace[i] - pathRace[i-1]) == (pathRace[i+2] - pathRace[i+1])) {
+      numberOfSwerves++;
+      i++;
+    }
+  }
+  return numberOfSwerves;
 }
