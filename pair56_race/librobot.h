@@ -17,11 +17,19 @@
 #define _TICK_LENGTH 3.25
 #define _WHEEL_RADIUS 33.0 // Need to change
 #define _ENCODER_CLICKS_PER_FULL_TURN 64
-#define _PARALLEL_ALIGN_ANGLE (int)15
+// #define _PARALLEL_ALIGN_ANGLE (int)15
+#define _PARALLEL_ALIGN_ANGLE (int)8
 
+// case of 40x40
 #define _MOVE_UNIT (int)(407/3.25)
 #define _FRONT_DIST (int)35
 #define _MID_SPOT (int)17
+
+// case of 60x60
+// #define _MOVE_UNIT (int)(608/3.25)
+// #define _FRONT_DIST (int)52
+// #define _MID_SPOT (int)27
+// #define _MID_SPOT (int)23
 
 // #define DO 22
 // #define CLK 23

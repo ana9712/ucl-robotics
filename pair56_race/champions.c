@@ -60,6 +60,7 @@ int main() {
   int rePos = 0;
   int backAtStartPoint = 0;
   int parallelCounter = 0;
+  int echoDist = 0;
 
   low(26);
   low(27);
@@ -147,7 +148,9 @@ int main() {
     else {
 
       // Parallel alignment (Only applies to left wall, as once robot is parallel to left wall it will be straight for all directions.)
-      parallel_align_left(LMR[0], parallelCounter);
+      pause(300);
+      echoDist = ping(8);
+      parallel_align_left(echoDist, parallelCounter);
       parallelCounter = 0;
       pause(300);
       LMR[0] = ping_cm(8);
@@ -385,7 +388,9 @@ int main() {
       // Parallel alignment (Only applies to left wall, as once robot is parallel to left wall it will be straight for all directions.)
       pause(300);
       LMR[0] = ping_cm(8);
-      parallel_align_left(LMR[0], parallelCounter);
+      pause(300);
+      echoDist = ping(8);
+      parallel_align_left(echoDist, parallelCounter);
       parallelCounter = 0;
 
       // Check for distance (left).
@@ -408,6 +413,12 @@ int main() {
       ticksCounter += rePos;
 
       turn_pivot_function(90);
+      // Parallel alignment
+      pause(300);
+      echoDist = ping(8);
+      parallel_align_left(echoDist, parallelCounter);
+      parallelCounter = 0;
+
       // Check for distance (right).
       pause(300);
       frontDist = ping_cm(8);

@@ -190,7 +190,7 @@ void parallel_align_left(int pingDist, int counter) {
     turn_pivot_function(-_PARALLEL_ALIGN_ANGLE);
     // Check new ping distance.
     pause(300);
-    newPingDist = ping_cm(8);
+    newPingDist = ping(8);
     if ((pingDist - newPingDist) > 0) {
         // Continue aligning towards the left.
         counter++;
@@ -214,7 +214,7 @@ void parallel_align_right(int pingDist) {
     turn_pivot_function(_PARALLEL_ALIGN_ANGLE);
     // Check new ping distance.
     pause(300);
-    newPingDist = ping_cm(8);
+    newPingDist = ping(8);
     if ((pingDist - newPingDist) > 0) {
         return parallel_align_right(newPingDist);
     }
@@ -234,7 +234,7 @@ int move_shortLeftCurve() {
     drive_getTicks(&tick_acc[0], &tick_acc[1]);
     int tmp[2] = {tick_acc[0], tick_acc[1]};
     while (( tmp[0] - tick_acc[0] < left_dist) && ( tmp[1] - tick_acc[1] < right_dist)) {
-        // pause(10);
+        pause(10);
         drive_getTicks(&tmp[0], &tmp[1]);
     }
     drive_speed(128,128);
@@ -250,7 +250,7 @@ int move_shortRightCurve() {
   drive_getTicks(&tick_acc[0], &tick_acc[1]);
   int tmp[2] = {tick_acc[0], tick_acc[1]};
   while (( tmp[0] - tick_acc[0] < left_dist) && ( tmp[1] - tick_acc[1] < right_dist)) {
-    // pause(10);
+    pause(10);
     drive_getTicks(&tmp[0], &tmp[1]);
   }
   drive_speed(128,128);
@@ -275,19 +275,19 @@ int move_shortLeftSwerve() {
   // starting ticks, used at end to calc total ticks.
   int orig[2] = {tick_acc[0], tick_acc[1]};
 
-  float left_dist = (float)( ((_MOVE_UNIT/4) - (_WHEEL_BASE / 3.25 / 2)) * 5 * PI / 16);
-  float right_dist = (float)( ((_MOVE_UNIT/4) + (_WHEEL_BASE / 3.25 / 2)) * 5 * PI / 16);
+  float left_dist = (float)( ((_MOVE_UNIT/4) - (_WHEEL_BASE / 3.25 / 2)) * PI / 4);
+  float right_dist = (float)( ((_MOVE_UNIT/4) + (_WHEEL_BASE / 3.25 / 2)) * PI / 4);
   float ratio = (float) left_dist / (float) right_dist;
 
   int totalSwerveDist = (int)(sqrt(2) * _MOVE_UNIT);
-  int curveLen = (int)( sqrt(2 * pow(_MOVE_UNIT/4,2) - (2 * pow(_MOVE_UNIT/4,2) * cos(5 * PI / 16))));
+  int curveLen = (int)( sqrt(2 * pow(_MOVE_UNIT/4,2) - (2 * pow(_MOVE_UNIT/4,2) * cos(PI / 4))));
   int strLen = totalSwerveDist - (2 * curveLen);
 
   // turn left
   drive_speed((int)(128 * ratio), 128);
 
   while (( tmp[0] - tick_acc[0] < (int)left_dist) && ( tmp[1] - tick_acc[1] < (int)right_dist)) {
-    // pause(10);
+    pause(10);
     drive_getTicks(&tmp[0], &tmp[1]);
   }
 
@@ -296,7 +296,7 @@ int move_shortLeftSwerve() {
   tick_acc[0] = tmp[0]; tick_acc[1] = tmp[1];
 
   while ((tmp[0] - tick_acc[0]) < strLen) {
-    // pause(10);
+    pause(10);
     drive_getTicks(&tmp[0], &tmp[1]);
   }
 
@@ -304,12 +304,13 @@ int move_shortLeftSwerve() {
   drive_speed(128, (int)(128 * ratio));
   tick_acc[0] = tmp[0]; tick_acc[1] = tmp[1];
   while (( tmp[0] - tick_acc[0] < (int)right_dist) && ( tmp[1] - tick_acc[1] < (int)left_dist)) {
-    // pause(10);
+    pause(10);
     drive_getTicks(&tmp[0], &tmp[1]);
   }
 
   //done.
   drive_speed(128,128);
+  pause(20);
   return (tmp[0] + tmp[1] - orig[0] - orig[1]) / 2;
 }
 
@@ -320,19 +321,19 @@ int move_shortRightSwerve() {
   // starting ticks, used at end to calc total ticks.
   int orig[2] = {tick_acc[0], tick_acc[1]};
 
-  float left_dist = (float)( ((_MOVE_UNIT/4) + (_WHEEL_BASE / 3.25 / 2)) * 5 * PI / 16);
-  float right_dist = (float)( ((_MOVE_UNIT/4) - (_WHEEL_BASE / 3.25 / 2)) * 5 * PI / 16);
+  float left_dist = (float)( ((_MOVE_UNIT/4) + (_WHEEL_BASE / 3.25 / 2)) * PI / 4);
+  float right_dist = (float)( ((_MOVE_UNIT/4) - (_WHEEL_BASE / 3.25 / 2)) * PI / 4);
   float ratio = (float) right_dist / (float) left_dist;
 
   int totalSwerveDist = (int)(sqrt(2) * _MOVE_UNIT);
-  int curveLen = (int)( sqrt(2 * pow(_MOVE_UNIT/4,2) - (2 * pow(_MOVE_UNIT/4,2) * cos(5 * PI / 16))));
+  int curveLen = (int)( sqrt(2 * pow(_MOVE_UNIT/4,2) - (2 * pow(_MOVE_UNIT/4,2) * cos(PI / 4))));
   int strLen = totalSwerveDist - (2 * curveLen);
 
   // turn right
   drive_speed(128, (int)(128 * ratio));
 
   while (( tmp[0] - tick_acc[0] < (int)left_dist) && ( tmp[1] - tick_acc[1] < (int)right_dist)) {
-    // pause(10);
+    pause(10);
     drive_getTicks(&tmp[0], &tmp[1]);
   }
 
@@ -341,7 +342,7 @@ int move_shortRightSwerve() {
   tick_acc[0] = tmp[0]; tick_acc[1] = tmp[1];
 
   while ((tmp[0] - tick_acc[0]) < strLen) {
-    // pause(10);
+    pause(10);
     drive_getTicks(&tmp[0], &tmp[1]);
   }
 
@@ -349,12 +350,13 @@ int move_shortRightSwerve() {
   drive_speed((int)(128 * ratio), 128);
   tick_acc[0] = tmp[0]; tick_acc[1] = tmp[1];
   while (( tmp[0] - tick_acc[0] < (int)right_dist) && ( tmp[1] - tick_acc[1] < (int)left_dist)) {
-    // pause(10);
+    pause(10);
     drive_getTicks(&tmp[0], &tmp[1]);
   }
 
   //done.
   drive_speed(128,128);
+  pause(20);
   return (tmp[0] + tmp[1] - orig[0] - orig[1]) / 2;
 }
 
