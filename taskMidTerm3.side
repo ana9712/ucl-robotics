@@ -1,6 +1,0 @@
-taskMidTerm3.side
->compiler=C
->memtype=lmm main ram
->optimize=-Os
->-fno-exceptions
->BOARD::ACTIVITYBOARD
